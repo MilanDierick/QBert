@@ -23,7 +23,7 @@ namespace Heirloom
 		void SetScale(glm::vec3 scale);
 
 		void Update(Timestep ts) override;
-		void Render() const override;
+		void Render() override;
 
 	private:
 		glm::vec3 m_Position;

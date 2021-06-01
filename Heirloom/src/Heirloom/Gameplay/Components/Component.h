@@ -13,6 +13,6 @@ namespace Heirloom
 		virtual ~Component() = default;
 
 		virtual void Update(Timestep ts) = 0;
-		virtual void Render() const = 0;
+		virtual void Render() = 0;
 	};
 }

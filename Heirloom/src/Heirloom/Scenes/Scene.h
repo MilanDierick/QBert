@@ -33,6 +33,6 @@ namespace Heirloom
 	protected:
 		bool m_IsActive;
 		std::string m_SceneName;
-		std::vector<GameObject> m_GameObjects;
+		std::vector<Ref<GameObject>> m_GameObjects;
 	};
 }

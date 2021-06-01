@@ -7,6 +7,7 @@
 
 #include "Heirloom.h"
 #include "HexagonalGrid/Hexagon.h"
+#include "HexagonalGrid/Layout.h"
 
 class SandboxScene final : public Heirloom::Scene
 {
@@ -23,6 +24,10 @@ private:
 	void DebugHexagonalGrid();
 
 	Heirloom::OrthographicCameraController m_CameraController;
+	Layout m_HexagonalGridLayout;
+
+	Heirloom::Ref<Heirloom::Texture2D> m_TestTileTexture;
+	Heirloom::Ref<Heirloom::Texture2D> m_TestTileAlternateTexture;
 	
 	std::unordered_set<Hex> m_Grid;
 };

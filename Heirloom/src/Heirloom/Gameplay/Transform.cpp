@@ -25,7 +25,7 @@ namespace Heirloom
 	{
 	}
 
-	void Transform::Render() const
+	void Transform::Render()
 	{
 	}
 }

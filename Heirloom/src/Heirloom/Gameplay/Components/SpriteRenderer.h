@@ -23,10 +23,8 @@ namespace Heirloom
 		void SetSprite(const Sprite& sprite) { m_Sprite = sprite; }
 
 		void Update(Timestep ts) override;
-		void Render() const override;
-
-		void LoadTextureFromPath(std::string path);
-
+		void Render() override;
+	
 	private:
 		Sprite m_Sprite;
 	};

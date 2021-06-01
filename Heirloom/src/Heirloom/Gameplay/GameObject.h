@@ -51,13 +51,13 @@ namespace Heirloom
 		void Render() const;
 
 		template <typename ComponentType = Component>
-		Ref<ComponentType> AddComponent(ComponentType* component);
+		ComponentType* AddComponent(ComponentType* component);
 
 		template <typename ComponentType = Component>
-		[[nodiscard]] Ref<ComponentType> GetComponent();
+		[[nodiscard]] ComponentType* GetComponent();
 
 		template <typename ComponentType = Component>
-		bool RemoveComponent(ComponentType component);
+		bool RemoveComponent(ComponentType* component);
 
 	private:
 		Ref<Transform> m_Transform;
@@ -65,20 +65,20 @@ namespace Heirloom
 	};
 
 	template <typename ComponentType>
-	Ref<ComponentType> GameObject::AddComponent(ComponentType* component)
+	ComponentType* GameObject::AddComponent(ComponentType* component)
 	{
 		HL_PROFILE_FUNCTION()
 
-		const std::pair<std::map<uint32_t, Component*>::iterator, bool> value = m_Components.emplace(
+		const std::pair<std::map<std::type_index, Component*>::iterator, bool> value = m_Components.emplace(
 			typeid(ComponentType),
 			component);
 
-		HL_CORE_TRACE("Added component of type {0} to game object", typeid(ComponentType));
-		return value.second ? value.first->second : nullptr;
+		HL_CORE_TRACE("Added component of type {0} to game object", typeid(ComponentType).name());
+		return value.second ? dynamic_cast<ComponentType*>(value.first->second) : nullptr;
 	}
 
 	template <typename ComponentType>
-	Ref<ComponentType> GameObject::GetComponent()
+	ComponentType* GameObject::GetComponent()
 	{
 		HL_PROFILE_FUNCTION()
 
@@ -91,7 +91,7 @@ namespace Heirloom
 	}
 
 	template <typename ComponentType>
-	bool GameObject::RemoveComponent(ComponentType component)
+	bool GameObject::RemoveComponent(ComponentType* component)
 	{
 		HL_PROFILE_FUNCTION()
 
