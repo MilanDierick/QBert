@@ -35,7 +35,8 @@ project "QBert"
 		"Heirloom/thirdparty",
 		"Heirloom/%{IncludeDir.GLFW}",
 		"Heirloom/%{IncludeDir.glm}",
-		"Heirloom/%{IncludeDir.irrKlang}"
+		"Heirloom/%{IncludeDir.irrKlang}",
+		"Heirloom/%{IncludeDir.glad}"
 	}
 
 	links

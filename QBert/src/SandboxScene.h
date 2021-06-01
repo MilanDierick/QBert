@@ -3,7 +3,10 @@
 // Solution: QBert
 
 #pragma once
+#include <unordered_set>
+
 #include "Heirloom.h"
+#include "HexagonalGrid/Hexagon.h"
 
 class SandboxScene final : public Heirloom::Scene
 {
@@ -15,4 +18,11 @@ public:
 	void OnUpdate() override;
 	void OnRender() override;
 	void OnImGuiRender() override;
+
+private:
+	void DebugHexagonalGrid();
+
+	Heirloom::OrthographicCameraController m_CameraController;
+	
+	std::unordered_set<Hex> m_Grid;
 };
