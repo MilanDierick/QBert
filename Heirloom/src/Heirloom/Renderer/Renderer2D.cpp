@@ -218,9 +218,9 @@ namespace Heirloom
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(Sprite& sprite)
+	void Renderer2D::DrawQuad(const Ref<Sprite> sprite)
 	{
-		DrawQuad(sprite.Position, sprite.Size, sprite.Texture, sprite.TilingFactor, sprite.TintColor);
+		DrawQuad(sprite->Position, sprite->Size, sprite->Texture, sprite->TilingFactor, sprite->TintColor);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position,

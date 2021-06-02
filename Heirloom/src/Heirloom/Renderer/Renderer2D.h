@@ -65,7 +65,7 @@ namespace Heirloom
 							 const Ref<Texture2D>& texture,
 							 float tilingFactor         = 1.0f,
 							 const glm::vec4& tintColor = glm::vec4(1.0f));
-		static void DrawQuad(Sprite& sprite);
+		static void DrawQuad(Ref<Sprite> sprite);
 
 		static void DrawRotatedQuad(const glm::vec2& position,
 									const glm::vec2& size,

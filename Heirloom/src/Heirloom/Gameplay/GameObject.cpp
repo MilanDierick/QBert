@@ -8,13 +8,13 @@ namespace Heirloom
 	{
 		HL_PROFILE_FUNCTION()
 
-		for (auto [key, component] : m_Components) component->Update(ts);
+		for (auto component : m_Components) component->Update(ts);
 	}
 
 	void GameObject::Render() const
 	{
 		HL_PROFILE_FUNCTION()
 
-		for (auto [key, component] : m_Components) component->Render();
+		for (auto component : m_Components) component->Render();
 	}
 }

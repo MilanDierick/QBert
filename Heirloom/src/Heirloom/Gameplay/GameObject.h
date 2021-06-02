@@ -51,51 +51,52 @@ namespace Heirloom
 		void Render() const;
 
 		template <typename ComponentType = Component>
-		ComponentType* AddComponent(ComponentType* component);
+		Ref<ComponentType> AddComponent(Ref<ComponentType> component);
 
 		template <typename ComponentType = Component>
-		[[nodiscard]] ComponentType* GetComponent();
+		[[nodiscard]] Ref<ComponentType> GetComponent();
 
 		template <typename ComponentType = Component>
-		bool RemoveComponent(ComponentType* component);
+		bool RemoveComponent(Ref<ComponentType> component);
 
 	private:
 		Ref<Transform> m_Transform;
-		std::map<std::type_index, Component*> m_Components;
+		std::vector<Ref<Component>> m_Components;
 	};
 
 	template <typename ComponentType>
-	ComponentType* GameObject::AddComponent(ComponentType* component)
+	Ref<ComponentType> GameObject::AddComponent(Ref<ComponentType> component)
 	{
 		HL_PROFILE_FUNCTION()
 
-		const std::pair<std::map<std::type_index, Component*>::iterator, bool> value = m_Components.emplace(
-			typeid(ComponentType),
-			component);
+		m_Components.push_back(component);
 
-		HL_CORE_TRACE("Added component of type {0} to game object", typeid(ComponentType).name());
-		return value.second ? dynamic_cast<ComponentType*>(value.first->second) : nullptr;
+		return component;
 	}
 
 	template <typename ComponentType>
-	ComponentType* GameObject::GetComponent()
+	Ref<ComponentType> GameObject::GetComponent()
 	{
-		HL_PROFILE_FUNCTION()
+		// HL_PROFILE_FUNCTION()
+		//
+		// try { return m_Components.at(typeid(ComponentType)); }
+		// catch (std::out_of_range&)
+		// {
+		// 	HL_CORE_WARN("Tried accessing non-existing component in gameobject!");
+		// 	return nullptr;
+		// }
 
-		try { return m_Components.at(typeid(ComponentType)); }
-		catch (std::out_of_range&)
-		{
-			HL_CORE_WARN("Tried accessing non-existing component in gameobject!");
-			return nullptr;
-		}
+		return nullptr;
 	}
 
 	template <typename ComponentType>
-	bool GameObject::RemoveComponent(ComponentType* component)
+	bool GameObject::RemoveComponent(Ref<ComponentType> component)
 	{
-		HL_PROFILE_FUNCTION()
+		// HL_PROFILE_FUNCTION()
+		//
+		// HL_CORE_TRACE("Removed component of type {0} from game object", typeid(ComponentType));
+		// return m_Components.erase(typeid(component));
 
-		HL_CORE_TRACE("Removed component of type {0} from game object", typeid(ComponentType));
-		return m_Components.erase(typeid(component));
+		return false;
 	}
 }
