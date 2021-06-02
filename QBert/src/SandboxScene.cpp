@@ -3,6 +3,8 @@
 #include "HexagonalGrid/HexagonalGrid.h"
 #include "glad/glad.h"
 
+#define PYRAMID_WIDTH 6
+
 SandboxScene::SandboxScene(const std::string& sceneName)
 	: Scene(sceneName),
 	  m_CameraController(1280.0f / 960.0f, false),
@@ -17,7 +19,10 @@ void SandboxScene::OnLoad()
 	m_TestTileTexture          = Heirloom::Texture2D::Create("assets/textures/TestTile.png");
 	m_TestTileAlternateTexture = Heirloom::Texture2D::Create("assets/textures/TestTileAlternate.png");
 
-	for (int q = 0; q <= 6; q++) { for (int r = 0; r <= 6 - q; r++) { m_Grid.insert(Hex(q, r, -q - r)); } }
+	for (int q = 0; q < PYRAMID_WIDTH; q++)
+	{
+		for (int r = 0; r < PYRAMID_WIDTH - q; r++) { m_Grid.insert(Hex(q, r, -q - r)); }
+	}
 
 	for (Hex hexagon : m_Grid)
 	{
@@ -25,9 +30,9 @@ void SandboxScene::OnLoad()
 		Heirloom::SpriteRenderer* spriteRenderer       = gameObject->AddComponent(new Heirloom::SpriteRenderer());
 		Heirloom::Sprite sprite                        = Heirloom::Sprite();
 
-		sprite.Position = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f};
-		sprite.Rotation = 0.0f;
-		sprite.Size     = {1.735f, 1.735f};
+		sprite.Position     = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f};
+		sprite.Rotation     = 0.0f;
+		sprite.Size         = {1.735f, 1.735f};
 		sprite.Texture      = m_TestTileTexture;
 		sprite.TilingFactor = 1.0f;
 		sprite.TintColor    = glm::vec4(1.0f);
