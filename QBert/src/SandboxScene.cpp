@@ -1,13 +1,14 @@
-﻿#include "SandboxScene.h"
+﻿#include "hlpch.h"
+#include "SandboxScene.h"
 
 #include "HexagonalGrid/HexagonalGrid.h"
 #include "glad/glad.h"
 
-#define PYRAMID_WIDTH 6
+#define PYRAMID_WIDTH 7
 
 SandboxScene::SandboxScene(const std::string& sceneName)
 	: Scene(sceneName),
-	  m_CameraController(1280.0f / 960.0f, false),
+	  m_CameraController(1280.0f / 960.0f),
 	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}})
 {
 }
@@ -19,10 +20,26 @@ void SandboxScene::OnLoad()
 	m_TestTileTexture          = Heirloom::Texture2D::Create("assets/textures/TestTile.png");
 	m_TestTileAlternateTexture = Heirloom::Texture2D::Create("assets/textures/TestTileAlternate.png");
 
+	size_t counter = 0;
+
 	for (int q = 0; q < PYRAMID_WIDTH; q++)
 	{
-		for (int r = 0; r < PYRAMID_WIDTH - q; r++) { m_Grid.insert(Hex(q, r, -q - r)); }
+		for (int r = 0; r < PYRAMID_WIDTH - q; r++)
+		{
+			HL_TRACE("Q: {0} R: {1}", q, r);
+			m_Grid.insert(Hex(q, r, -q - r));
+			++counter;
+		}
 	}
+
+	// This mess is to center the pyramid in the viewport, can this be made easier?
+	const Hex hex                 = *m_Grid.find(Hex(1, 4, -5));
+	glm::vec3 finalCameraPosition = glm::vec3(HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hex), 0.0f) + glm::vec3(
+		m_HexagonalGridLayout.Size.x,
+		-m_HexagonalGridLayout.Size.y / 2,
+		0.0f);
+	m_CameraController.SetCameraPosition(finalCameraPosition);
+	m_CameraController.SetZoomLevel(10.0f);
 
 	for (Hex hexagon : m_Grid)
 	{
@@ -52,8 +69,6 @@ void SandboxScene::OnUpdate()
 {
 	HL_PROFILE_FUNCTION()
 
-	m_CameraController.Update(Heirloom::Timestep{0.016f});
-
 	for (const Heirloom::Ref<Heirloom::GameObject> gameObject : m_GameObjects)
 	{
 		gameObject->Update(Heirloom::Timestep{0.016f});
@@ -62,14 +77,13 @@ void SandboxScene::OnUpdate()
 
 void SandboxScene::OnRender()
 {
-	Heirloom::RenderCommand::SetClearColor({0.8f, 0.8f, 0.1f, 1.0f});
+	Heirloom::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 	Heirloom::RenderCommand::Clear();
 
 	Heirloom::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	// DebugHexagonalGrid();
-
 	for (const Heirloom::Ref<Heirloom::GameObject> gameObject : m_GameObjects) { gameObject->Render(); }
+	// DebugHexagonalGrid();
 
 	Heirloom::Renderer2D::EndScene();
 }

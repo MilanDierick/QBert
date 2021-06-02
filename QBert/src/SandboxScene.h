@@ -5,6 +5,7 @@
 #pragma once
 #include <unordered_set>
 
+#include "CenteredCameraController.h"
 #include "Heirloom.h"
 #include "HexagonalGrid/Hexagon.h"
 #include "HexagonalGrid/Layout.h"
@@ -23,7 +24,7 @@ public:
 private:
 	void DebugHexagonalGrid();
 
-	Heirloom::OrthographicCameraController m_CameraController;
+	CenteredCameraController m_CameraController;
 	Layout m_HexagonalGridLayout;
 
 	Heirloom::Ref<Heirloom::Texture2D> m_TestTileTexture;
