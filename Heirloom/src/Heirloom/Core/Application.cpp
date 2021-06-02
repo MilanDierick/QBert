@@ -7,7 +7,7 @@
 #include "Heirloom/Scenes/SceneManager.h"
 
 // TODO: No magic numbers, this should probably be in a settings object
-#define MS_PER_TICK 1000 / 144
+#define MS_PER_TICK 1000 / 100
 
 namespace Heirloom
 {

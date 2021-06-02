@@ -12,7 +12,7 @@ public:
 
 		Heirloom::SceneManager::LoadScene(new SandboxScene("SandboxScene"), false);
 
-		HL_INFO("Initalized QBertApplication!");
+		HL_INFO("Initialized QBertApplication!");
 	}
 
 	~QBertApplication() override

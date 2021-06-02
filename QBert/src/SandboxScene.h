@@ -14,7 +14,7 @@ class SandboxScene final : public Heirloom::Scene
 {
 public:
 	explicit SandboxScene(const std::string& sceneName);
-	
+
 	void OnLoad() override;
 	void OnUnload() override;
 	void OnUpdate() override;
@@ -22,13 +22,11 @@ public:
 	void OnImGuiRender() override;
 
 private:
+	void CreatePyramid(unsigned short int pyramidSize);
 	void DebugHexagonalGrid();
 
 	CenteredCameraController m_CameraController;
 	Layout m_HexagonalGridLayout;
-
-	Heirloom::Ref<Heirloom::Texture2D> m_TestTileTexture;
-	Heirloom::Ref<Heirloom::Texture2D> m_TestTileAlternateTexture;
 	
 	std::unordered_set<Hex> m_Grid;
 };

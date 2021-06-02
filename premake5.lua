@@ -29,6 +29,7 @@ project "QBert"
 
 	includedirs
 	{
+		"QBert/src",
 		"Heirloom/thirdparty/spdlog/include",
 		"Heirloom/include",
 		"Heirloom/src",

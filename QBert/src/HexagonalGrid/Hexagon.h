@@ -10,7 +10,7 @@
 template <typename Number, int W>
 struct Hexagon
 {
-	const Number Q, R, S;
+	Number Q, R, S;
 
 	Hexagon(Number q, Number r)
 		: Q(q), R(r), S(-q - r)
@@ -20,6 +20,17 @@ struct Hexagon
 	Hexagon(Number q, Number r, Number s)
 		: Q(q), R(r), S(s)
 	{
+	}
+
+	Hexagon() = default;
+
+	Hexagon& operator=(const Hexagon& other)
+	{
+		if (this == &other) return *this;
+		Q = other.Q;
+		R = other.R;
+		S = other.S;
+		return *this;
 	}
 };
 
@@ -41,7 +52,7 @@ inline int HexagonLength(const Hex hex) { return (abs(hex.Q) + abs(hex.R) + abs(
 
 inline int HexagonDistance(const Hex a, const Hex b) { return HexagonLength(HexagonSubtract(a, b)); }
 
-const std::vector<Hex> HEX_DIRECTIONS = {
+const std::vector HEX_DIRECTIONS = {
 	Hex(1, 0, -1),
 	Hex(1, -1, 0),
 	Hex(0, -1, 1),
@@ -57,6 +68,19 @@ inline Hex HexDirection(const int direction)
 }
 
 inline Hex HexNeighbor(const Hex hex, const int direction) { return HexagonAdd(hex, HexDirection(direction)); }
+
+inline Hex HexRound(FractionalHex h)
+{
+	int q              = static_cast<int>(round(h.Q));
+	int r              = static_cast<int>(round(h.R));
+	int s              = static_cast<int>(round(h.S));
+	const double qDiff = abs(q - h.Q);
+	const double rDiff = abs(r - h.R);
+	if (const double sDiff = abs(s - h.S); qDiff > rDiff && qDiff > sDiff) { q = -r - s; }
+	else if (rDiff > sDiff) { r = -q - s; }
+	else { s = -q - r; }
+	return Hex(q, r, s);
+}
 
 // ReSharper disable once CppInconsistentNaming
 namespace std
