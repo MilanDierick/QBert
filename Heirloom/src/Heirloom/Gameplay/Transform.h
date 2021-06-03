@@ -9,11 +9,11 @@
 
 namespace Heirloom
 {
-	class Transform final : Component
+	class Transform final : public Component
 	{
 	public:
-		Transform();
-		Transform(glm::vec3 position, glm::vec3 scale);
+		explicit Transform(GameObject* gameObject);
+		Transform(glm::vec3 position, glm::vec3 scale, GameObject* gameObject);
 
 		[[nodiscard]] const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(float x, float y, float z);
@@ -21,6 +21,8 @@ namespace Heirloom
 		[[nodiscard]] const glm::vec3& GetScale() const { return m_Scale; }
 		void SetScale(float x, float y, float z);
 		void SetScale(glm::vec3 scale);
+		GameObject* GetParent() const override { return m_Parent; }
+		void SetParent(GameObject* gameObject) override { m_Parent = gameObject; }
 
 		void Update(Timestep ts) override;
 		void Render() override;
@@ -28,5 +30,6 @@ namespace Heirloom
 	private:
 		glm::vec3 m_Position;
 		glm::vec3 m_Scale;
+		GameObject* m_Parent;
 	};
 }

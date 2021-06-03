@@ -31,6 +31,8 @@ public:
 	void SetCurrentHex(const Hex& currentHex);
 	[[nodiscard]] Heirloom::Ref<Heirloom::SpriteRenderer> GetSpriteRenderer() const;
 	void SetSpriteRenderer(Heirloom::Ref<Heirloom::SpriteRenderer> spriteRenderer);
+	Heirloom::GameObject* GetParent() const override { return m_Parent; }
+	void SetParent(Heirloom::GameObject* gameObject) override { m_Parent = gameObject; }
 
 private:
 	Hex m_CurrentHex;
@@ -43,6 +45,8 @@ private:
 
 	Heirloom::Ref<Heirloom::SpriteRenderer> m_SpriteRenderer;
 	Heirloom::Ref<std::unordered_set<Hex>> m_Hexagons;
+
+	Heirloom::GameObject* m_Parent;
 
 	void MoveTowardsTargetHex(size_t totalTicksForMove);
 	void AlignQBertSpritePosition() const;

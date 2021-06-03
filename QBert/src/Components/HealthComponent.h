@@ -23,6 +23,9 @@ public:
 	[[nodiscard]] HealthComponent(int maximumLives, int currentLives);
 
 	Heirloom::Event<HealthDepletedEventArgs> HealthDepletedEvent;
+
+	Heirloom::GameObject* GetParent() const override { return m_Parent; }
+	void SetParent(Heirloom::GameObject* gameObject) override { m_Parent = gameObject; }
 	
 	void Update(Heirloom::Timestep ts) override;
 	void Render() override;
@@ -32,6 +35,8 @@ public:
 private:
 	int m_MaximumLives;
 	int m_CurrentLives;
+
+	Heirloom::GameObject* m_Parent;
 
 	void OnOutOfBoundsEvent(OutOfBoundsEventArgs args);
 };

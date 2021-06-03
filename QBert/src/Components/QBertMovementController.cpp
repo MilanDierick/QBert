@@ -52,10 +52,10 @@ void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMov
 {
 	const glm::vec3 currentHexPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 0.0f};
 	const glm::vec3 targetHexPosition  = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_TargetHex), 0.0f};
-	glm::vec3 currentSpritePosition    = m_SpriteRenderer->GetSprite()->Position;
+	glm::vec3 currentPosition          = m_Parent->GetTransform()->GetPosition();
 
 	const glm::vec3 totalDistanceToMove = targetHexPosition - currentHexPosition;
-	
+
 	if (std::abs(m_DistanceAlreadyMoved.x) >= std::abs(totalDistanceToMove.x) && std::abs(m_DistanceAlreadyMoved.y) >=
 		std::abs(totalDistanceToMove.y))
 	{
@@ -70,24 +70,19 @@ void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMov
 		}
 	}
 
-	currentSpritePosition.x += totalDistanceToMove.x / totalTicksForMove;
-	currentSpritePosition.y += totalDistanceToMove.y / totalTicksForMove;
-	
+	currentPosition.x += totalDistanceToMove.x / totalTicksForMove;
+	currentPosition.y += totalDistanceToMove.y / totalTicksForMove;
+
 	m_DistanceAlreadyMoved.x += totalDistanceToMove.x / totalTicksForMove;
 	m_DistanceAlreadyMoved.y += totalDistanceToMove.y / totalTicksForMove;
 
-	m_SpriteRenderer->GetSprite()->Position = currentSpritePosition;
+	m_Parent->GetTransform()->SetPosition(currentPosition);
 }
 
 void QBertMovementController::AlignQBertSpritePosition() const
 {
-	glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
-
-	alignedPosition.x += m_HexagonalGridLayout.Size.x - 0.75f;
-	alignedPosition.y += m_HexagonalGridLayout.Size.y * 1.5f;
-
-	// TODO: Move this to the SpriteRenderer, would need events in the transform though to make sure the SpriteRenderer can update the position of the sprite
-	m_SpriteRenderer->GetSprite()->Position = alignedPosition;
+	const glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
+	m_Parent->GetTransform()->SetPosition(alignedPosition);
 }
 
 bool QBertMovementController::CheckIfWithinBounds() const

@@ -4,7 +4,6 @@
 
 #pragma once
 #include <map>
-#include <typeindex>
 #include "Transform.h"
 #include "Components/Component.h"
 
@@ -60,7 +59,7 @@ namespace Heirloom
 		bool RemoveComponent(Ref<ComponentType> component);
 
 	private:
-		Ref<Transform> m_Transform;
+		Ref<Transform> m_Transform{CreateRef<Transform>(this)};
 		std::vector<Ref<Component>> m_Components;
 	};
 
@@ -69,6 +68,7 @@ namespace Heirloom
 	{
 		HL_PROFILE_FUNCTION()
 
+		component->SetParent(this);
 		m_Components.push_back(component);
 
 		return component;

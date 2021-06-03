@@ -10,7 +10,6 @@
 class CenteredCameraController
 {
 public:
-	CenteredCameraController();
 	explicit CenteredCameraController(float aspectRatio);
 
 	Heirloom::OrthographicCamera& GetCamera() { return m_Camera; }

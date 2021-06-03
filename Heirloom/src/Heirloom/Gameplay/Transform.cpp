@@ -3,13 +3,13 @@
 
 namespace Heirloom
 {
-	Transform::Transform()
-		: m_Position(0.0f), m_Scale(0.0f)
+	Transform::Transform(GameObject* gameObject)
+		: m_Position(0.0f), m_Scale(0.0f), m_Parent(gameObject)
 	{
 	}
 
-	Transform::Transform(const glm::vec3 position, const glm::vec3 scale)
-		: m_Position(position), m_Scale(scale)
+	Transform::Transform(const glm::vec3 position, const glm::vec3 scale, GameObject* gameObject)
+		: m_Position(position), m_Scale(scale), m_Parent(gameObject)
 	{
 	}
 

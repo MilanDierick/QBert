@@ -13,11 +13,8 @@ using Json = nlohmann::json;
 SandboxScene::SandboxScene(const std::string& sceneName)
 	: Scene(sceneName),
 	  m_Configuration(),
-	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}})
-{
-	ReadConfigFile();
-	m_CameraController = CenteredCameraController(static_cast<float>(m_Configuration.AspectRatioWidth) / static_cast<float>(m_Configuration.AspectRatioHeight));
-}
+	  m_CameraController(1280.0f / 960.0f),
+	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}}) { ReadConfigFile(); }
 
 // TODO: Clean this up
 void SandboxScene::OnLoad()
@@ -42,6 +39,12 @@ void SandboxScene::OnLoad()
 			-static_cast<int>(m_Configuration.InitialQBertPosition.z)),
 		Heirloom::CreateRef<std::unordered_set<Hex>>(m_Grid)));
 
+	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{
+		m_HexagonalGridLayout.Size.x - 0.75f,
+		m_HexagonalGridLayout.Size.y * 1.5f,
+		0.0f
+	});
+	
 	movementController->SetSpriteRenderer(qbertSpriteRenderer);
 	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
 
@@ -137,6 +140,7 @@ void SandboxScene::CreatePyramid(const int pyramidSize)
 		sprite->TilingFactor = 1.0f;
 		sprite->TintColor    = glm::vec4(1.0f);
 
+		gameObject->GetTransform()->SetPosition({HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f});
 		spriteRenderer->SetSprite(sprite);
 
 		m_GameObjects.push_back(gameObject);
