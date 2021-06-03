@@ -163,7 +163,7 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>HL_DEBUG;HL_PROFILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom\thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -185,7 +185,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win32\*.dll"\ (xcopy /Q
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>HL_DEBUG;HL_PROFILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom\thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -207,7 +207,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>HL_RELEASE;HL_PROFILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom\thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -233,7 +233,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win32\*.dll"\ (xcopy /Q
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>HL_RELEASE;HL_PROFILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom\thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -259,7 +259,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>HL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom\thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -285,7 +285,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win32\*.dll"\ (xcopy /Q
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>HL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom\thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Heirloom\thirdparty\spdlog\include;..\Heirloom\include;..\Heirloom\src;..\Heirloom\thirdparty;..\Heirloom\thirdparty\GLFW\include;..\Heirloom\thirdparty\glm;..\Heirloom\thirdparty\irrKlang\include;..\Heirloom;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -309,10 +309,12 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClInclude Include="src\CenteredCameraController.h" />
     <ClInclude Include="src\Components\HealthComponent.h" />
     <ClInclude Include="src\Components\QBertMovementController.h" />
+    <ClInclude Include="src\ExternalJsonTypeParserDefinitions.h" />
     <ClInclude Include="src\HexagonalGrid\Hexagon.h" />
     <ClInclude Include="src\HexagonalGrid\HexagonalGrid.h" />
     <ClInclude Include="src\HexagonalGrid\Layout.h" />
     <ClInclude Include="src\HexagonalGrid\Orientation.h" />
+    <ClInclude Include="src\SandboxLevelSettings.h" />
     <ClInclude Include="src\SandboxScene.h" />
   </ItemGroup>
   <ItemGroup>

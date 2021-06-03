@@ -6,6 +6,7 @@ IncludeDir["ImGui"] = "thirdparty/imgui"
 IncludeDir["glm"] = "thirdparty/glm"
 IncludeDir["stb_image"] = "thirdparty/stb_image"
 IncludeDir["irrKlang"] = "thirdparty/irrKlang/include"
+IncludeDir["JSONforModernC++"] = "thirdparty/JSONforModernCpp/include"
 
 configurations 
 {
@@ -77,7 +78,8 @@ project "Heirloom"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.irrKlang}"
+		"%{IncludeDir.irrKlang}",
+		"%{IncludeDir.JSONforModernCpp}"
 	}
 
 	links 

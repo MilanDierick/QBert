@@ -7,6 +7,7 @@
 
 #include "CenteredCameraController.h"
 #include "Heirloom.h"
+#include "SandboxLevelSettings.h"
 #include "HexagonalGrid/Hexagon.h"
 #include "HexagonalGrid/Layout.h"
 
@@ -22,8 +23,10 @@ public:
 	void OnImGuiRender() override;
 
 private:
-	void CreatePyramid(unsigned short int pyramidSize);
-	void DebugHexagonalGrid();
+	void ReadConfigFile();
+	void CreatePyramid(const int pyramidSize);
+
+	SandboxLevelSettings m_Configuration;
 
 	CenteredCameraController m_CameraController;
 	Layout m_HexagonalGridLayout;

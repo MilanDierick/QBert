@@ -37,7 +37,7 @@ project "QBert"
 		"Heirloom/%{IncludeDir.GLFW}",
 		"Heirloom/%{IncludeDir.glm}",
 		"Heirloom/%{IncludeDir.irrKlang}",
-		"Heirloom/%{IncludeDir.glad}"
+		"Heirloom/%{IncludeDir.JSONforModernCpp}",
 	}
 
 	links

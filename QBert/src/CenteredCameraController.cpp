@@ -4,6 +4,11 @@
 #include "Heirloom/Core/Application.h"
 #include "Heirloom/Core/Input.h"
 
+CenteredCameraController::CenteredCameraController()
+	: m_AspectRatio(0), m_Camera(0, 0, 0, 0)
+{
+}
+
 CenteredCameraController::CenteredCameraController(const float aspectRatio)
 	: m_AspectRatio(aspectRatio),
 	  m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
