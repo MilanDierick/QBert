@@ -79,13 +79,13 @@ namespace Heirloom
 				SoundService::GetSoundEngine()->Update();
 			}
 
+			m_ImGuiLayer->Begin();
+			
 			{
 				HL_PROFILE_SCOPE("SceneManager OnRender")
 
 				SceneManager::Render();
 			}
-
-			m_ImGuiLayer->Begin();
 
 			{
 				HL_PROFILE_SCOPE("SceneManager OnImGuiRender")

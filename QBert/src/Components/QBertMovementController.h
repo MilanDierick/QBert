@@ -12,16 +12,18 @@
 
 struct OutOfBoundsEventArgs : Heirloom::EventArgs
 {
-	
 };
 
 class QBertMovementController final : public Heirloom::Component
 {
 public:
-	[[nodiscard]] explicit QBertMovementController(size_t ticksBetweenMoves, size_t ticksPerMove, Hex currentHex, Heirloom::Ref<std::unordered_set<Hex>> hexagons);
+	[[nodiscard]] explicit QBertMovementController(size_t ticksBetweenMoves,
+												   size_t ticksPerMove,
+												   Hex currentHex,
+												   Heirloom::Ref<std::unordered_set<Hex>> hexagons);
 
 	Heirloom::Event<OutOfBoundsEventArgs> OutOfBoundsEvent;
-	
+
 	void Update(Heirloom::Timestep ts) override;
 	void Render() override;
 

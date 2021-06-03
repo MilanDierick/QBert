@@ -1,5 +1,7 @@
 ﻿#include "hlpch.h"
 #include "SandboxScene.h"
+
+#include "Components/HealthComponent.h"
 #include "Components/QBertMovementController.h"
 #include "HexagonalGrid/HexagonalGrid.h"
 #include "glad/glad.h"
@@ -24,6 +26,7 @@ void SandboxScene::OnLoad()
 		Heirloom::Sprite(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f), 0.0f, qbert1Texture, 1.0f, glm::vec4(1.0f)));
 	auto qbertGameObject     = Heirloom::CreateRef<Heirloom::GameObject>();
 	auto qbertSpriteRenderer = qbertGameObject->AddComponent(Heirloom::CreateRef<Heirloom::SpriteRenderer>());
+	auto qbertHealthComponent = qbertGameObject->AddComponent(Heirloom::CreateRef<HealthComponent>(3, 3));
 
 	qbertSpriteRenderer->SetSprite(qbertSprite);
 	auto movementController = qbertGameObject->AddComponent(
@@ -33,6 +36,7 @@ void SandboxScene::OnLoad()
 													 Heirloom::CreateRef<std::unordered_set<Hex>>(m_Grid)));
 
 	movementController->SetSpriteRenderer(qbertSpriteRenderer);
+	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
 
 	CreatePyramid(PYRAMID_WIDTH);
 	

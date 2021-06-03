@@ -59,10 +59,15 @@ void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMov
 	if (std::abs(m_DistanceAlreadyMoved.x) >= std::abs(totalDistanceToMove.x) && std::abs(m_DistanceAlreadyMoved.y) >=
 		std::abs(totalDistanceToMove.y))
 	{
-		HL_INFO("Move to target hex finished!");
 		m_CurrentHex           = m_TargetHex;
 		m_DistanceAlreadyMoved = glm::vec3(0.0f);
 		AlignQBertSpritePosition();
+
+		if (!CheckIfWithinBounds())
+		{
+			const OutOfBoundsEventArgs outOfBoundsEventArgs = OutOfBoundsEventArgs();
+			OutOfBoundsEvent.Invoke(outOfBoundsEventArgs);
+		}
 	}
 
 	currentSpritePosition.x += totalDistanceToMove.x / totalTicksForMove;
@@ -118,10 +123,4 @@ void QBertMovementController::OnKeyPressedEvent(const Heirloom::KeyPressedEventA
 	}
 
 	m_TicksSinceLastMove = 0;
-
-	if (!CheckIfWithinBounds())
-	{
-		const OutOfBoundsEventArgs outOfBoundsEventArgs = OutOfBoundsEventArgs();
-		OutOfBoundsEvent.Invoke(outOfBoundsEventArgs);
-	}
 }
