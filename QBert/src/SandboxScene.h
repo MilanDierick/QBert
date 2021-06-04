@@ -14,6 +14,8 @@
 class SandboxScene final : public Heirloom::Scene
 {
 public:
+	inline static SandboxLevelSettings Configuration = SandboxLevelSettings();
+
 	explicit SandboxScene(const std::string& sceneName);
 
 	void OnLoad() override;
@@ -24,12 +26,10 @@ public:
 
 private:
 	void ReadConfigFile();
-	void CreatePyramid(const int pyramidSize);
-
-	SandboxLevelSettings m_Configuration;
+	void CreatePyramid(int pyramidSize);
 
 	CenteredCameraController m_CameraController;
 	Layout m_HexagonalGridLayout;
-	
+
 	std::unordered_set<Hex> m_Grid;
 };
