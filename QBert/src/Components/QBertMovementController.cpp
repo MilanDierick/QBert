@@ -17,6 +17,8 @@ QBertMovementController::QBertMovementController(const size_t ticksBetweenMoves,
 	  m_TicksPerMove(ticksPerMove),
 	  m_Parent(parent)
 {
+	HL_PROFILE_FUNCTION()
+	
 	m_Hexagons             = hexagons;
 	OutOfBoundsEvent       = Heirloom::Event<OutOfBoundsEventArgs>();
 	m_DistanceAlreadyMoved = glm::vec3(0.0f);
@@ -26,6 +28,8 @@ QBertMovementController::QBertMovementController(const size_t ticksBetweenMoves,
 
 void QBertMovementController::Update(Heirloom::Timestep ts)
 {
+	HL_PROFILE_FUNCTION()
+	
 	UNREFERENCED_PARAMETER(ts);
 
 	if (m_CurrentState == QBertMovementState::Disk)
@@ -53,6 +57,8 @@ void QBertMovementController::SetCurrentHex(const Hex& currentHex) { m_CurrentHe
 
 bool QBertMovementController::CheckIfOnDisk()
 {
+	HL_PROFILE_FUNCTION()
+	
 	std::vector<Heirloom::Ref<Heirloom::GameObject>> gameObjects = m_Parent->GetCurrentScene()->GetGameObjects();
 	
 	for (Heirloom::Ref<Heirloom::GameObject> gameObject : gameObjects)
@@ -74,6 +80,8 @@ bool QBertMovementController::CheckIfOnDisk()
 
 void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMove)
 {
+	HL_PROFILE_FUNCTION()
+	
 	const glm::vec3 currentHexPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 0.0f};
 	const glm::vec3 targetHexPosition  = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_TargetHex), 0.0f};
 	glm::vec3 currentPosition          = m_Parent->GetTransform()->GetPosition();
@@ -109,12 +117,16 @@ void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMov
 
 void QBertMovementController::UpdateTransformPosition() const
 {
+	HL_PROFILE_FUNCTION()
+	
 	const glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
 	m_Parent->GetTransform()->SetPosition(alignedPosition);
 }
 
 bool QBertMovementController::CheckIfWithinBounds() const
 {
+	HL_PROFILE_FUNCTION()
+	
 	if (std::abs(m_CurrentHex.Q - -m_CurrentHex.R) > SandboxScene::Configuration.PyramidWidth - 1 || m_CurrentHex.Q < 0
 		|| m_CurrentHex.R < 0) return false;
 	return true;
@@ -122,6 +134,8 @@ bool QBertMovementController::CheckIfWithinBounds() const
 
 void QBertMovementController::OnKeyPressedEvent(const Heirloom::KeyPressedEventArgs args)
 {
+	HL_PROFILE_FUNCTION()
+	
 	if (m_TicksSinceLastMove < m_TicksBetweenMoves) return;
 
 	if (args.KeyCode == HL_KEY_KP_1)

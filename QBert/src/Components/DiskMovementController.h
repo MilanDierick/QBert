@@ -30,8 +30,6 @@ public:
 										 Heirloom::Ref<std::unordered_set<Hex>> hexagons,
 										 Heirloom::GameObject* parent);
 
-	~DiskMovementController() override;
-
 	[[nodiscard]] Heirloom::GameObject* GetParent() const override { return m_Parent; }
 	void SetParent(Heirloom::GameObject* const parent) override { m_Parent = parent; }
 	[[nodiscard]] Hex GetCurrentHex() const { return m_CurrentHex; }

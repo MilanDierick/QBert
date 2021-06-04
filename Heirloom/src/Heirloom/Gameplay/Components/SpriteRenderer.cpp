@@ -1,6 +1,7 @@
 #include "hlpch.h"
 #include "SpriteRenderer.h"
 
+#include "glad/glad.h"
 #include "Heirloom/Gameplay/GameObject.h"
 #include "Heirloom/Renderer/Renderer2D.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
@@ -12,7 +13,6 @@ Heirloom::SpriteRenderer::SpriteRenderer()
 
 Heirloom::SpriteRenderer::~SpriteRenderer()
 {
-	HL_TRACE("SpriteRenderer destroyed");
 }
 
 void Heirloom::SpriteRenderer::Update(Timestep ts)

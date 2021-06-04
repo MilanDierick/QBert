@@ -23,13 +23,10 @@ DiskMovementController::DiskMovementController(const Hex currentHex,
 	  m_Hexagons(hexagons),
 	  m_Parent(parent) { UpdateTransformPosition(); }
 
-DiskMovementController::~DiskMovementController()
-{
-	HL_TRACE("DiskMovementController being destroyed!");
-}
-
 void DiskMovementController::Update(Heirloom::Timestep ts)
 {
+	HL_PROFILE_FUNCTION()
+
 	UNREFERENCED_PARAMETER(ts);
 
 	if (m_QBertMovementController == nullptr) return;
@@ -53,6 +50,8 @@ void DiskMovementController::Render()
 
 void DiskMovementController::StartMovingDisk()
 {
+	HL_PROFILE_FUNCTION()
+
 	m_CurrentState = DiskMovementState::Moving;
 	m_QBertMovementController->SetCurrentState(QBertMovementState::Disk);
 	MoveDisk();
@@ -62,6 +61,8 @@ void DiskMovementController::MoveDisk() { MoveTowardsTargetHex(m_TicksPerMove); 
 
 void DiskMovementController::FinishedMovingDisk()
 {
+	HL_PROFILE_FUNCTION()
+	
 	Hex dropOffHex = HexNeighbor(m_CurrentHex, 2);
 	dropOffHex     = HexNeighbor(dropOffHex, 1);
 
@@ -76,12 +77,16 @@ void DiskMovementController::FinishedMovingDisk()
 
 void DiskMovementController::UpdateTransformPosition() const
 {
+	HL_PROFILE_FUNCTION()
+	
 	const glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
 	m_Parent->GetTransform()->SetPosition(alignedPosition);
 }
 
 void DiskMovementController::MoveTowardsTargetHex(const size_t totalTicksForMove)
 {
+	HL_PROFILE_FUNCTION()
+	
 	const glm::vec3 currentHexPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 0.0f};
 	const glm::vec3 targetHexPosition  = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_TargetHex), 0.0f};
 	glm::vec3 currentPosition          = m_Parent->GetTransform()->GetPosition();

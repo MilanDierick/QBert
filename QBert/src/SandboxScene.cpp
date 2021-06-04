@@ -19,6 +19,8 @@ SandboxScene::SandboxScene(const std::string& sceneName)
 
 void SandboxScene::OnLoad()
 {
+	HL_PROFILE_FUNCTION()
+	
 	HL_INFO("Loading SandboxScene...");
 
 	const auto qbert1Texture = Texture2D::Create(Configuration.QBertTexture);
@@ -35,7 +37,7 @@ void SandboxScene::OnLoad()
 		Heirloom::CreateRef<HealthComponent>(Configuration.MaximumHealth, Configuration.StartHealth));
 
 	qbertSpriteRenderer->SetSprite(qbertSprite);
-	auto movementController = qbertGameObject->AddComponent(Heirloom::CreateRef<QBertMovementController>(
+	const auto movementController = qbertGameObject->AddComponent(Heirloom::CreateRef<QBertMovementController>(
 		Configuration.TicksBetweenMoves,
 		Configuration.TicksPerMove,
 		Hex(static_cast<int>(Configuration.InitialQBertPosition.x),
@@ -45,9 +47,9 @@ void SandboxScene::OnLoad()
 		Heirloom::CreateRef<std::unordered_set<Hex>>(m_Grid)));
 
 	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{
-		m_HexagonalGridLayout.Size.x - 0.75f,
-		m_HexagonalGridLayout.Size.y * 1.5f,
-		0.0f
+		0.0f,
+		m_HexagonalGridLayout.Size.y * 1.25f,
+		-1.0f
 	});
 
 	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
@@ -74,11 +76,11 @@ void SandboxScene::OnLoad()
 																	CreateRef<std::unordered_set<Hex>>(m_Grid),
 																	disk1GameObject.get()));
 
-	disk1SpriteRenderer->SetSpriteOffset(glm::vec3{
-		m_HexagonalGridLayout.Size.x - Configuration.QBertSpritePositionOffset.x,
-		m_HexagonalGridLayout.Size.y * Configuration.QBertSpritePositionOffset.y - 1,
-		0.0f
-	});
+	// disk1SpriteRenderer->SetSpriteOffset(glm::vec3{
+	// 	m_HexagonalGridLayout.Size.x - Configuration.QBertSpritePositionOffset.x,
+	// 	m_HexagonalGridLayout.Size.y * Configuration.QBertSpritePositionOffset.y - 1,
+	// 	0.0f
+	// });
 
 	m_GameObjects.push_back(disk1GameObject);
 
@@ -89,8 +91,8 @@ void SandboxScene::OnLoad()
 									 static_cast<int>(Configuration.CameraHexPosition.y),
 									 static_cast<int>(Configuration.CameraHexPosition.z)));
 	glm::vec3 finalCameraPosition = glm::vec3(HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hex), 0.0f) + glm::vec3(
-		m_HexagonalGridLayout.Size.x,
-		-m_HexagonalGridLayout.Size.y / 2,
+		0.0f,
+		0.0f,
 		0.0f);
 	m_CameraController.SetCameraPosition(finalCameraPosition);
 	m_CameraController.SetZoomLevel(Configuration.InitialZoomLevel);
@@ -100,6 +102,8 @@ void SandboxScene::OnLoad()
 
 void SandboxScene::OnUnload()
 {
+	HL_PROFILE_FUNCTION()
+	
 	HL_INFO("Unloading SandboxScene...");
 }
 
@@ -109,22 +113,6 @@ void SandboxScene::OnUpdate()
 
 	for (const Ref<GameObject> gameObject : m_GameObjects) { gameObject->Update(Timestep{0.016f}); }
 
-	static bool temp = false;
-	
-	if (!temp && Input::IsKeyPressed(HL_KEY_SPACE))
-	{
-		temp = true;
-		m_GameObjects[1]->SetActive(false);
-	}
-
-	static bool temp2 = false;
-	
-	if (!temp2 && Input::IsKeyPressed(HL_KEY_B))
-	{
-		temp2 = true;
-		m_GameObjects[2]->SetActive(false);
-	}
-	
 	const auto newEndIterator = std::ranges::remove_if(m_GameObjects,
 													   [](Ref<GameObject> gameObject)
 													   {
@@ -141,6 +129,8 @@ void SandboxScene::OnUpdate()
 
 void SandboxScene::OnRender()
 {
+	HL_PROFILE_FUNCTION()
+	
 	RenderCommand::SetClearColor(Configuration.ClearColor);
 	RenderCommand::Clear();
 
@@ -167,6 +157,8 @@ void SandboxScene::OnImGuiRender()
 // TODO: Move this to the engine
 void SandboxScene::ReadConfigFile()
 {
+	HL_PROFILE_FUNCTION()
+	
 	Json json;
 
 	std::ifstream input;
@@ -179,6 +171,8 @@ void SandboxScene::ReadConfigFile()
 
 void SandboxScene::CreatePyramid(const int pyramidSize)
 {
+	HL_PROFILE_FUNCTION()
+	
 	const auto testTileTexture = Texture2D::Create(Configuration.TestTileTexture);
 
 	for (int q = 0; q < pyramidSize; q++)
@@ -201,6 +195,7 @@ void SandboxScene::CreatePyramid(const int pyramidSize)
 
 		gameObject->GetTransform()->SetPosition({HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f});
 		spriteRenderer->SetSprite(sprite);
+		// spriteRenderer->SetSpriteOffset(glm::vec3{5.0f, 0.0f, 0.0f});
 
 		m_GameObjects.push_back(gameObject);
 	}

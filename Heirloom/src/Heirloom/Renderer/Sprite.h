@@ -10,7 +10,7 @@ namespace Heirloom
 {
 	struct Sprite
 	{
-		[[nodiscard]] explicit Sprite(const glm::vec3& position     = glm::vec3(1.0f),
+		[[nodiscard]] explicit Sprite(const glm::vec3& position     = glm::vec3(0.0f),
 									  const glm::vec2& size         = glm::vec2(1.0f),
 									  const float rotation          = 0.0f,
 									  const Ref<Texture2D>& texture = nullptr,

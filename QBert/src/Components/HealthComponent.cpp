@@ -12,6 +12,8 @@ void HealthComponent::Update(Heirloom::Timestep ts)
 
 void HealthComponent::Render()
 {
+	HL_PROFILE_FUNCTION()
+	
 	ImGui::SetNextWindowPos(ImVec2(10, 50));
 	ImGui::Begin("Health",
 				 nullptr,
@@ -28,6 +30,8 @@ void HealthComponent::RegisterOutOfBoundsEventHandler(Heirloom::Ref<QBertMovemen
 
 void HealthComponent::OnOutOfBoundsEvent(OutOfBoundsEventArgs args)
 {
+	HL_PROFILE_FUNCTION()
+	
 	UNREFERENCED_PARAMETER(args);
 
 	if (--m_CurrentLives <= 0)
