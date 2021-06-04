@@ -307,6 +307,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\CenteredCameraController.h" />
+    <ClInclude Include="src\Components\DiskMovementController.h" />
     <ClInclude Include="src\Components\HealthComponent.h" />
     <ClInclude Include="src\Components\QBertMovementController.h" />
     <ClInclude Include="src\ExternalJsonTypeParserDefinitions.h" />
@@ -319,6 +320,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CenteredCameraController.cpp" />
+    <ClCompile Include="src\Components\DiskMovementController.cpp" />
     <ClCompile Include="src\Components\HealthComponent.cpp" />
     <ClCompile Include="src\Components\QBertMovementController.cpp" />
     <ClCompile Include="src\QBertApplication.cpp" />
