@@ -6,9 +6,10 @@
   "StartHealth": 3,
   "TicksBetweenMoves": 100,
   "TicksPerMove": 50,
-  "InitialZoomLevel": 6.0,
+  "InitialZoomLevel": 8.0,
   "QBertTexture": "assets/textures/QBert1.png",
   "TestTileTexture": "assets/textures/TestTile.png",
+  "DiskTexture": "assets/textures/Disk.png",
   "TestTileSpriteSize": {
     "g": 1.735,
     "r": 1.735,
@@ -26,8 +27,8 @@
     "y": 1.5
   },
   "InitialQBertPosition": {
-    "b": 0.0,
-    "g": 6.0,
+    "b": 5.0,
+    "g": 1.0,
     "p": -6.0,
     "r": 0.0,
     "s": 6.0,

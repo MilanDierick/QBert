@@ -12,7 +12,7 @@ namespace Heirloom
 	{
 	public:
 		explicit SpriteRenderer();
-		~SpriteRenderer() override = default;
+		~SpriteRenderer() override;
 
 		SpriteRenderer(const SpriteRenderer& other)                = delete;
 		SpriteRenderer(SpriteRenderer&& other) noexcept            = delete;

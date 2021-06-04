@@ -3,10 +3,16 @@
 
 #include "Heirloom/Gameplay/GameObject.h"
 #include "Heirloom/Renderer/Renderer2D.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 Heirloom::SpriteRenderer::SpriteRenderer()
-	: m_SpriteOffset(0.0f)
+	: m_SpriteOffset(0.0f), m_Parent(nullptr)
 {
+}
+
+Heirloom::SpriteRenderer::~SpriteRenderer()
+{
+	HL_TRACE("SpriteRenderer destroyed");
 }
 
 void Heirloom::SpriteRenderer::Update(Timestep ts)
