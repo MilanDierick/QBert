@@ -15,7 +15,6 @@ SandboxScene::SandboxScene(const std::string& sceneName)
 	  m_CameraController(1280.0f / 960.0f),
 	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}}) { ReadConfigFile(); }
 
-// TODO: Clean this up
 void SandboxScene::OnLoad()
 {
 	HL_INFO("Loading SandboxScene...");

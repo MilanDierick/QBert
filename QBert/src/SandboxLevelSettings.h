@@ -10,7 +10,7 @@
 struct SandboxLevelSettings
 {
 	SandboxLevelSettings() = default;
-	
+
 	[[nodiscard]]
 	SandboxLevelSettings(const int pyramidWidth,
 						 const int aspectRatioWidth,
@@ -22,6 +22,7 @@ struct SandboxLevelSettings
 						 const float initialZoomLevel,
 						 const std::string& qBertTexture,
 						 const std::string& testTileTexture,
+						 const std::string& diskTexture,
 						 const glm::vec2& testTileSpriteSize,
 						 const glm::vec2& qBertSpritePositionOffset,
 						 const glm::vec3& startingHexPosition,
@@ -36,6 +37,7 @@ struct SandboxLevelSettings
 		  InitialZoomLevel(initialZoomLevel),
 		  QBertTexture(qBertTexture),
 		  TestTileTexture(testTileTexture),
+		  DiskTexture(diskTexture),
 		  TestTileSpriteSize(testTileSpriteSize),
 		  QBertSpritePositionOffset(qBertSpritePositionOffset),
 		  CameraHexPosition(startingHexPosition),
@@ -55,6 +57,7 @@ struct SandboxLevelSettings
 
 	std::string QBertTexture;
 	std::string TestTileTexture;
+	std::string DiskTexture;
 
 	glm::vec2 TestTileSpriteSize;
 	glm::vec2 QBertSpritePositionOffset;
@@ -73,6 +76,7 @@ struct SandboxLevelSettings
 								   InitialZoomLevel,
 								   QBertTexture,
 								   TestTileTexture,
+								   DiskTexture,
 								   TestTileSpriteSize,
 								   QBertSpritePositionOffset,
 								   InitialQBertPosition,
