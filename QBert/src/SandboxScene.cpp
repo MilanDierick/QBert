@@ -2,6 +2,7 @@
 #include "SandboxScene.h"
 
 #include "SandboxLevelSettings.h"
+#include "Components/DiskMovementController.h"
 #include "Components/HealthComponent.h"
 #include "Components/QBertMovementController.h"
 #include "HexagonalGrid/HexagonalGrid.h"
@@ -9,6 +10,7 @@
 #define PYRAMID_WIDTH 7
 
 using Json = nlohmann::json;
+using namespace Heirloom;
 
 SandboxScene::SandboxScene(const std::string& sceneName)
 	: Scene(sceneName),
@@ -19,12 +21,16 @@ void SandboxScene::OnLoad()
 {
 	HL_INFO("Loading SandboxScene...");
 
-	const auto qbert1Texture = Heirloom::Texture2D::Create(Configuration.QBertTexture);
+	const auto qbert1Texture = Texture2D::Create(Configuration.QBertTexture);
 
-	const auto qbertSprite = Heirloom::CreateRef<Heirloom::Sprite>(
-		Heirloom::Sprite(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f), 0.0f, qbert1Texture, 1.0f, glm::vec4(1.0f)));
-	auto qbertGameObject      = Heirloom::CreateRef<Heirloom::GameObject>(this);
-	auto qbertSpriteRenderer  = qbertGameObject->AddComponent(Heirloom::CreateRef<Heirloom::SpriteRenderer>());
+	const auto qbertSprite = Heirloom::CreateRef<Sprite>(Sprite(glm::vec3(0.0f, 0.0f, -1.0f),
+																glm::vec2(1.0f),
+																0.0f,
+																qbert1Texture,
+																1.0f,
+																glm::vec4(1.0f)));
+	auto qbertGameObject      = Heirloom::CreateRef<GameObject>(this);
+	auto qbertSpriteRenderer  = qbertGameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
 	auto qbertHealthComponent = qbertGameObject->AddComponent(
 		Heirloom::CreateRef<HealthComponent>(Configuration.MaximumHealth, Configuration.StartHealth));
 
@@ -45,6 +51,36 @@ void SandboxScene::OnLoad()
 	});
 
 	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
+
+	const Ref<Texture2D> diskTexture = Texture2D::Create(Configuration.DiskTexture);
+
+	const Ref<Sprite> diskSprite = CreateRef<Sprite>(Sprite(glm::vec3(0.0f, 0.0f, -1.0f),
+															glm::vec2(1.0f),
+															0.0f,
+															diskTexture,
+															1.0f,
+															glm::vec4(1.0f)));
+
+	Ref<GameObject> disk1GameObject         = CreateRef<GameObject>(this);
+	Ref<SpriteRenderer> disk1SpriteRenderer = disk1GameObject->AddComponent(CreateRef<SpriteRenderer>());
+
+	disk1SpriteRenderer->SetSprite(diskSprite);
+
+	disk1GameObject->AddComponent(CreateRef<DiskMovementController>(Hex(5, 2, -7),
+																	m_HexagonalGridLayout,
+																	0,
+																	0,
+																	250,
+																	CreateRef<std::unordered_set<Hex>>(m_Grid),
+																	disk1GameObject.get()));
+
+	disk1SpriteRenderer->SetSpriteOffset(glm::vec3{
+		m_HexagonalGridLayout.Size.x - Configuration.QBertSpritePositionOffset.x,
+		m_HexagonalGridLayout.Size.y * Configuration.QBertSpritePositionOffset.y - 1,
+		0.0f
+	});
+
+	m_GameObjects.push_back(disk1GameObject);
 
 	CreatePyramid(Configuration.PyramidWidth);
 
@@ -71,22 +107,48 @@ void SandboxScene::OnUpdate()
 {
 	HL_PROFILE_FUNCTION()
 
-	for (const Heirloom::Ref<Heirloom::GameObject> gameObject : m_GameObjects)
+	for (const Ref<GameObject> gameObject : m_GameObjects) { gameObject->Update(Timestep{0.016f}); }
+
+	static bool temp = false;
+	
+	if (!temp && Input::IsKeyPressed(HL_KEY_SPACE))
 	{
-		gameObject->Update(Heirloom::Timestep{0.016f});
+		temp = true;
+		m_GameObjects[1]->SetActive(false);
 	}
+
+	static bool temp2 = false;
+	
+	if (!temp2 && Input::IsKeyPressed(HL_KEY_B))
+	{
+		temp2 = true;
+		m_GameObjects[2]->SetActive(false);
+	}
+	
+	const auto newEndIterator = std::ranges::remove_if(m_GameObjects,
+													   [](Ref<GameObject> gameObject)
+													   {
+														   if (!gameObject->IsActive())
+														   {
+															   gameObject.reset();
+															   return true;
+														   }
+														   return false;
+													   }).begin();
+
+	m_GameObjects.erase(newEndIterator, std::end(m_GameObjects));
 }
 
 void SandboxScene::OnRender()
 {
-	Heirloom::RenderCommand::SetClearColor(Configuration.ClearColor);
-	Heirloom::RenderCommand::Clear();
+	RenderCommand::SetClearColor(Configuration.ClearColor);
+	RenderCommand::Clear();
 
-	Heirloom::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	for (const Heirloom::Ref<Heirloom::GameObject> gameObject : m_GameObjects) { gameObject->Render(); }
+	for (const Ref<GameObject> gameObject : m_GameObjects) { gameObject->Render(); }
 
-	Heirloom::Renderer2D::EndScene();
+	Renderer2D::EndScene();
 }
 
 void SandboxScene::OnImGuiRender()
@@ -117,7 +179,7 @@ void SandboxScene::ReadConfigFile()
 
 void SandboxScene::CreatePyramid(const int pyramidSize)
 {
-	const auto testTileTexture = Heirloom::Texture2D::Create(Configuration.TestTileTexture);
+	const auto testTileTexture = Texture2D::Create(Configuration.TestTileTexture);
 
 	for (int q = 0; q < pyramidSize; q++)
 	{
@@ -126,10 +188,9 @@ void SandboxScene::CreatePyramid(const int pyramidSize)
 
 	for (Hex hexagon : m_Grid)
 	{
-		Heirloom::Ref<Heirloom::GameObject> gameObject         = Heirloom::CreateRef<Heirloom::GameObject>(this);
-		Heirloom::Ref<Heirloom::SpriteRenderer> spriteRenderer = gameObject->AddComponent(
-			Heirloom::CreateRef<Heirloom::SpriteRenderer>());
-		Heirloom::Ref<Heirloom::Sprite> sprite = Heirloom::CreateRef<Heirloom::Sprite>();
+		Ref<GameObject> gameObject         = Heirloom::CreateRef<GameObject>(this);
+		Ref<SpriteRenderer> spriteRenderer = gameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
+		Ref<Sprite> sprite                 = Heirloom::CreateRef<Sprite>();
 
 		sprite->Position     = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f};
 		sprite->Rotation     = 0.0f;

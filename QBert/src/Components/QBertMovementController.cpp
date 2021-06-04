@@ -1,5 +1,6 @@
 ﻿#include "QBertMovementController.h"
 
+#include "DiskMovementController.h"
 #include "SandboxScene.h"
 #include "HexagonalGrid/HexagonalGrid.h"
 
@@ -52,21 +53,21 @@ void QBertMovementController::SetCurrentHex(const Hex& currentHex) { m_CurrentHe
 
 bool QBertMovementController::CheckIfOnDisk()
 {
-	// std::vector<Heirloom::Ref<Heirloom::GameObject>> gameObjects = m_Parent->GetCurrentScene()->GetGameObjects();
-	//
-	// for (Heirloom::Ref<Heirloom::GameObject> gameObject : gameObjects)
-	// {
-	// 	Heirloom::Ref<DiskMovementController> diskController = gameObject->GetComponent<DiskMovementController>();
-	// 	
-	// 	if (diskController)
-	// 	{
-	// 		if (diskController->GetCurrentHex().Q == m_CurrentHex.Q && diskController->GetCurrentHex().R == m_CurrentHex.R)
-	// 		{
-	// 			diskController->SetQBertMovementController(this);
-	// 			return true;
-	// 		}
-	// 	}
-	// }
+	std::vector<Heirloom::Ref<Heirloom::GameObject>> gameObjects = m_Parent->GetCurrentScene()->GetGameObjects();
+	
+	for (Heirloom::Ref<Heirloom::GameObject> gameObject : gameObjects)
+	{
+		Heirloom::Ref<DiskMovementController> diskController = gameObject->GetComponent<DiskMovementController>();
+		
+		if (diskController)
+		{
+			if (diskController->GetCurrentHex().Q == m_CurrentHex.Q && diskController->GetCurrentHex().R == m_CurrentHex.R)
+			{
+				diskController->SetQBertMovementController(this);
+				return true;
+			}
+		}
+	}
 
 	return false;
 }
