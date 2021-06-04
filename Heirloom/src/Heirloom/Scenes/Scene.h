@@ -3,11 +3,10 @@
 // Solution: HeirloomEngine
 
 #pragma once
-#include "Heirloom/Gameplay/GameObject.h"
 
 namespace Heirloom
 {
-	class Layer;
+	class GameObject;
 
 	class Scene
 	{
@@ -29,7 +28,8 @@ namespace Heirloom
 		bool IsActive() const;
 		void SetActive(bool active);
 		std::string GetName() const;
-
+		[[nodiscard]] std::vector<Ref<GameObject>>& GetGameObjects() { return m_GameObjects; }
+	
 	protected:
 		bool m_IsActive;
 		std::string m_SceneName;

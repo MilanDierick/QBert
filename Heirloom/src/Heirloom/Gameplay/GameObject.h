@@ -6,6 +6,7 @@
 #include <map>
 #include "Transform.h"
 #include "Components/Component.h"
+#include "Heirloom/Scenes/Scene.h"
 
 namespace Heirloom
 {
@@ -13,39 +14,21 @@ namespace Heirloom
 	class GameObject final
 	{
 	public:
-		GameObject()  = default;
-		~GameObject() = default;
+		explicit GameObject(Scene* currentScene);
+		~GameObject();
 
 		// Copy & move operations
-		GameObject(const GameObject& other)
-			: m_Transform(other.m_Transform), m_Components(other.m_Components)
-		{
-		}
-
-		GameObject(GameObject&& other) noexcept
-			: m_Transform(std::move(other.m_Transform)), m_Components(std::move(other.m_Components))
-		{
-		}
-
-		GameObject& operator=(const GameObject& other)
-		{
-			if (this == &other) return *this;
-			m_Transform  = other.m_Transform;
-			m_Components = other.m_Components;
-			return *this;
-		}
-
-		GameObject& operator=(GameObject&& other) noexcept
-		{
-			if (this == &other) return *this;
-			m_Transform  = std::move(other.m_Transform);
-			m_Components = std::move(other.m_Components);
-			return *this;
-		}
+		GameObject(const GameObject& other);
+		GameObject(GameObject&& other) noexcept;
+		GameObject& operator=(const GameObject& other);
+		GameObject& operator=(GameObject&& other) noexcept;
 
 		// ReSharper disable once CppMemberFunctionMayBeConst
 		[[nodiscard]] Ref<Transform> GetTransform() { return m_Transform; }
-
+		[[nodiscard]] Scene* GetCurrentScene() const { return m_CurrentScene; }
+		[[nodiscard]] bool IsActive() const { return m_Active; }
+		void SetActive(const bool isActive) { m_Active = isActive; }
+		
 		void Update(Timestep ts);
 		void Render() const;
 
@@ -59,6 +42,8 @@ namespace Heirloom
 		bool RemoveComponent(Ref<ComponentType> component);
 
 	private:
+		bool m_Active;
+		Scene* m_CurrentScene{nullptr};
 		Ref<Transform> m_Transform{CreateRef<Transform>(this)};
 		std::vector<Ref<Component>> m_Components;
 	};
@@ -77,16 +62,17 @@ namespace Heirloom
 	template <typename ComponentType>
 	Ref<ComponentType> GameObject::GetComponent()
 	{
-		// HL_PROFILE_FUNCTION()
-		//
-		// try { return m_Components.at(typeid(ComponentType)); }
-		// catch (std::out_of_range&)
-		// {
-		// 	HL_CORE_WARN("Tried accessing non-existing component in gameobject!");
-		// 	return nullptr;
-		// }
+		for (std::shared_ptr<Component> component : m_Components)
+		{
+			Ref<ComponentType> castedType = std::dynamic_pointer_cast<ComponentType>(component);
 
-		return nullptr;
+			if (castedType)
+			{
+				return castedType;
+			}
+		}
+
+		return Ref<ComponentType>(nullptr);
 	}
 
 	template <typename ComponentType>

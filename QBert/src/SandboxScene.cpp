@@ -25,7 +25,7 @@ void SandboxScene::OnLoad()
 
 	const auto qbertSprite = Heirloom::CreateRef<Heirloom::Sprite>(
 		Heirloom::Sprite(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f), 0.0f, qbert1Texture, 1.0f, glm::vec4(1.0f)));
-	auto qbertGameObject      = Heirloom::CreateRef<Heirloom::GameObject>();
+	auto qbertGameObject      = Heirloom::CreateRef<Heirloom::GameObject>(this);
 	auto qbertSpriteRenderer  = qbertGameObject->AddComponent(Heirloom::CreateRef<Heirloom::SpriteRenderer>());
 	auto qbertHealthComponent = qbertGameObject->AddComponent(
 		Heirloom::CreateRef<HealthComponent>(m_Configuration.MaximumHealth, m_Configuration.StartHealth));
@@ -128,7 +128,7 @@ void SandboxScene::CreatePyramid(const int pyramidSize)
 
 	for (Hex hexagon : m_Grid)
 	{
-		Heirloom::Ref<Heirloom::GameObject> gameObject         = Heirloom::CreateRef<Heirloom::GameObject>();
+		Heirloom::Ref<Heirloom::GameObject> gameObject         = Heirloom::CreateRef<Heirloom::GameObject>(this);
 		Heirloom::Ref<Heirloom::SpriteRenderer> spriteRenderer = gameObject->AddComponent(
 			Heirloom::CreateRef<Heirloom::SpriteRenderer>());
 		Heirloom::Ref<Heirloom::Sprite> sprite = Heirloom::CreateRef<Heirloom::Sprite>();
