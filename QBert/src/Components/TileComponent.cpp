@@ -1,6 +1,7 @@
 ﻿#include "TileComponent.h"
 
 #include "EventArgs.h"
+#include "ScoreComponent.h"
 
 TileComponent::TileComponent(const Hex currentHex,
 							 const Heirloom::WeakRef<Heirloom::GameObject> parent,
@@ -46,13 +47,20 @@ void TileComponent::ChangeTileState(const TileState newState)
 {
 	if (newState == m_TileState) return;
 
+	if (m_FirstOccupation && newState == TileState::Occupied)
+	{
+		const ScoreSourceEventArgs args = ScoreSourceEventArgs(ScoreSource::Tile);
+		
+		ScoreSourceEvent.Invoke(args);
+	}
+
 	m_FirstOccupation = false;
 	m_TileState       = newState;
 
 	ChangeTileSprite();
 
 	const TileStateChangedEventArgs args = TileStateChangedEventArgs(m_FirstOccupation, m_CurrentHex);
-	
+
 	TileOccupiedEvent.Invoke(args);
 }
 

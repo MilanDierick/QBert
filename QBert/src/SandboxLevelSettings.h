@@ -19,6 +19,8 @@ struct SandboxLevelSettings
 						 const int startHealth,
 						 const int ticksBetweenMoves,
 						 const int ticksPerMove,
+						 const int scorePerOccupiedTile,
+						 const int scorePerDiskLeft,
 						 const float initialZoomLevel,
 						 const std::string& qBertTexture,
 						 const std::string& tileTexture,
@@ -36,6 +38,8 @@ struct SandboxLevelSettings
 		  StartHealth(startHealth),
 		  TicksBetweenMoves(ticksBetweenMoves),
 		  TicksPerMove(ticksPerMove),
+		  ScorePerOccupiedTile(scorePerOccupiedTile),
+		  ScorePerDiskLeft(scorePerDiskLeft),
 		  InitialZoomLevel(initialZoomLevel),
 		  QBertTexture(qBertTexture),
 		  TileTexture(tileTexture),
@@ -56,6 +60,8 @@ struct SandboxLevelSettings
 	int StartHealth;
 	int TicksBetweenMoves;
 	int TicksPerMove;
+	int ScorePerOccupiedTile;
+	int ScorePerDiskLeft;
 
 	float InitialZoomLevel;
 
@@ -78,6 +84,8 @@ struct SandboxLevelSettings
 								   StartHealth,
 								   TicksBetweenMoves,
 								   TicksPerMove,
+								   ScorePerOccupiedTile,
+								   ScorePerDiskLeft,
 								   InitialZoomLevel,
 								   QBertTexture,
 								   TileTexture,

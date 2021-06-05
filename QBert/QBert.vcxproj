@@ -310,6 +310,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClInclude Include="src\Components\DiskMovementController.h" />
     <ClInclude Include="src\Components\HealthComponent.h" />
     <ClInclude Include="src\Components\QBertMovementController.h" />
+    <ClInclude Include="src\Components\ScoreComponent.h" />
     <ClInclude Include="src\Components\TileComponent.h" />
     <ClInclude Include="src\EventArgs.h" />
     <ClInclude Include="src\ExternalJsonTypeParserDefinitions.h" />
@@ -317,6 +318,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClInclude Include="src\HexagonalGrid\HexagonalGrid.h" />
     <ClInclude Include="src\HexagonalGrid\Layout.h" />
     <ClInclude Include="src\HexagonalGrid\Orientation.h" />
+    <ClInclude Include="src\IScoreSource.h" />
     <ClInclude Include="src\SandboxLevelSettings.h" />
     <ClInclude Include="src\SandboxScene.h" />
   </ItemGroup>
@@ -325,6 +327,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClCompile Include="src\Components\DiskMovementController.cpp" />
     <ClCompile Include="src\Components\HealthComponent.cpp" />
     <ClCompile Include="src\Components\QBertMovementController.cpp" />
+    <ClCompile Include="src\Components\ScoreComponent.cpp" />
     <ClCompile Include="src\Components\TileComponent.cpp" />
     <ClCompile Include="src\QBertApplication.cpp" />
     <ClCompile Include="src\SandboxScene.cpp" />
@@ -333,6 +336,27 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ProjectReference Include="..\Heirloom\Heirloom.vcxproj">
       <Project>{C4D42A4A-B0A1-8555-D9BA-73FDC5E6BAE3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\configs\json_test.json" />
+    <Content Include="assets\configs\SandboxConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\fonts\Lingua.otf" />
+    <Content Include="assets\shaders\FlatColor.glsl" />
+    <Content Include="assets\shaders\Texture.glsl" />
+    <Content Include="assets\sounds\bleep.mp3" />
+    <Content Include="assets\sounds\bleep.wav" />
+    <Content Include="assets\sounds\breakout.mp3" />
+    <Content Include="assets\sounds\powerup.wav" />
+    <Content Include="assets\sounds\solid.wav" />
+    <Content Include="assets\textures\AlternateTileTexture.png" />
+    <Content Include="assets\textures\background.jpg" />
+    <Content Include="assets\textures\Checkerboard.png" />
+    <Content Include="assets\textures\Disk.png" />
+    <Content Include="assets\textures\logo.png" />
+    <Content Include="assets\textures\QBert1.png" />
+    <Content Include="assets\textures\TileTexture.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

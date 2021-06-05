@@ -6,6 +6,8 @@
   "StartHealth": 3,
   "TicksBetweenMoves": 100,
   "TicksPerMove": 50,
+  "ScorePerOccupiedTile": 50,
+  "ScorePerDiskLeft": 150,
   "InitialZoomLevel": 8.0,
   "QBertTexture": "assets/textures/QBert1.png",
   "TileTexture": "assets/textures/TileTexture.png",
@@ -28,8 +30,8 @@
     "y": 1.5
   },
   "InitialQBertPosition": {
-    "b": 5.0,
-    "g": 1.0,
+    "b": 0.0,
+    "g": 6.0,
     "p": -6.0,
     "r": 0.0,
     "s": 6.0,

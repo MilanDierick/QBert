@@ -5,6 +5,7 @@
 #include "Components/DiskMovementController.h"
 #include "Components/HealthComponent.h"
 #include "Components/QBertMovementController.h"
+#include "Components/ScoreComponent.h"
 #include "Components/TileComponent.h"
 #include "HexagonalGrid/HexagonalGrid.h"
 
@@ -76,6 +77,11 @@ void SandboxScene::OnLoad()
 
 	m_GameObjects.push_back(disk1GameObject);
 
+	Ref<GameObject> scoreObject = CreateRef<GameObject>(this);
+	scoreObject->AddComponent(CreateRef<ScoreComponent>(scoreObject, 0));
+
+	m_GameObjects.push_back(scoreObject);
+
 	// This mess is to center the pyramid in the viewport, can this be made easier?
 	const Hex hex = *m_Grid.find(Hex(static_cast<int>(Configuration.CameraHexPosition.x),
 									 static_cast<int>(Configuration.CameraHexPosition.y),
@@ -142,6 +148,7 @@ void SandboxScene::OnImGuiRender()
 }
 
 // TODO: Move this to the engine
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void SandboxScene::ReadConfigFile()
 {
 	HL_PROFILE_FUNCTION()

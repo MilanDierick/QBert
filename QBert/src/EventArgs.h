@@ -6,7 +6,18 @@
 #include "Heirloom.h"
 #include "HexagonalGrid/Hexagon.h"
 
+enum class ScoreSource;
 enum class TileState;
+
+struct ScoreSourceEventArgs : Heirloom::EventArgs
+{
+	[[nodiscard]] explicit ScoreSourceEventArgs(const ScoreSource scoreSource)
+		: ScoreSource(scoreSource)
+	{
+	}
+
+	ScoreSource ScoreSource;
+};
 
 struct HexPositionChangedEventArgs : Heirloom::EventArgs
 {

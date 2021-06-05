@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Heirloom.h"
+#include "IScoreSource.h"
 #include "HexagonalGrid/Hexagon.h"
 
 struct HexPositionChangedEventArgs;
@@ -15,7 +16,7 @@ enum class TileState
 	Occupied
 };
 
-class TileComponent final : public Heirloom::Component
+class TileComponent final : public Heirloom::Component, public IScoreSource
 {
 public:
 	[[nodiscard]] explicit TileComponent(Hex currentHex,
