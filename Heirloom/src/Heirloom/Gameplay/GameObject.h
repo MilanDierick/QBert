@@ -11,7 +11,7 @@
 namespace Heirloom
 {
 	// TODO: We can only add a single component of each type to a game object, we need to be able to add multiple components per type, fix this
-	class GameObject final
+	class GameObject final : public std::enable_shared_from_this<GameObject>
 	{
 	public:
 		explicit GameObject(Scene* currentScene);
@@ -43,8 +43,8 @@ namespace Heirloom
 
 	private:
 		bool m_Active;
-		Scene* m_CurrentScene{nullptr};
-		Ref<Transform> m_Transform{CreateRef<Transform>(this)};
+		Scene* m_CurrentScene;
+		Ref<Transform> m_Transform; // TODO: Probably should be a normal stack-allocated member
 		std::vector<Ref<Component>> m_Components;
 	};
 
@@ -53,7 +53,7 @@ namespace Heirloom
 	{
 		HL_PROFILE_FUNCTION()
 
-		component->SetParent(this);
+		component->SetParent(shared_from_this());
 		m_Components.push_back(component);
 
 		return component;

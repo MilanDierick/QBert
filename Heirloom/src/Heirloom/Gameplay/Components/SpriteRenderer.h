@@ -23,8 +23,8 @@ namespace Heirloom
 		void SetSprite(const Ref<Sprite> sprite) { m_Sprite = sprite; }
 		[[nodiscard]] glm::vec3& GetSpriteOffset() { return m_SpriteOffset; }
 		void SetSpriteOffset(const glm::vec3& spriteOffset) { m_SpriteOffset = spriteOffset; }
-		GameObject* GetParent() const override { return m_Parent; }
-		void SetParent(GameObject* gameObject) override { m_Parent = gameObject; }
+		WeakRef<GameObject> GetParent() const override { return m_Parent; }
+		void SetParent(const Ref<GameObject> gameObject) override { m_Parent = gameObject; }
 
 		void Update(Timestep ts) override;
 		void Render() override;
@@ -32,6 +32,6 @@ namespace Heirloom
 	private:
 		Ref<Sprite> m_Sprite;
 		glm::vec3 m_SpriteOffset;
-		GameObject* m_Parent;
+		WeakRef<GameObject> m_Parent;
 	};
 }

@@ -8,7 +8,8 @@
   "TicksPerMove": 50,
   "InitialZoomLevel": 8.0,
   "QBertTexture": "assets/textures/QBert1.png",
-  "TestTileTexture": "assets/textures/TestTile.png",
+  "TileTexture": "assets/textures/TileTexture.png",
+  "AlternateTileTexture": "assets/textures/AlternateTileTexture.png",
   "DiskTexture": "assets/textures/Disk.png",
   "TestTileSpriteSize": {
     "g": 1.735,

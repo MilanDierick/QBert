@@ -9,7 +9,7 @@ DiskMovementController::DiskMovementController(const Hex currentHex,
 											   const size_t ticksSinceLastMove,
 											   const size_t ticksPerMove,
 											   const Heirloom::Ref<std::unordered_set<Hex>> hexagons,
-											   Heirloom::GameObject* const parent)
+											   Heirloom::Ref<Heirloom::GameObject> const parent)
 	: m_CurrentHex(currentHex),
 	  m_TargetHex(Hex(static_cast<int>(SandboxScene::Configuration.InitialQBertPosition.x - 1),
 					  static_cast<int>(SandboxScene::Configuration.InitialQBertPosition.y + 2),
@@ -29,8 +29,8 @@ void DiskMovementController::Update(Heirloom::Timestep ts)
 
 	UNREFERENCED_PARAMETER(ts);
 
-	if (m_QBertMovementController == nullptr) return;
-	if (m_QBertMovementController->GetCurrentHex().Q != m_CurrentHex.Q && m_QBertMovementController->GetCurrentHex().R
+	if (m_QBertMovementController.lock() == nullptr) return;
+	if (m_QBertMovementController.lock()->GetCurrentHex().Q != m_CurrentHex.Q && m_QBertMovementController.lock()->GetCurrentHex().R
 		!= m_CurrentHex.R) { return; }
 
 	switch (m_CurrentState)
@@ -53,7 +53,7 @@ void DiskMovementController::StartMovingDisk()
 	HL_PROFILE_FUNCTION()
 
 	m_CurrentState = DiskMovementState::Moving;
-	m_QBertMovementController->SetCurrentState(QBertMovementState::Disk);
+	m_QBertMovementController.lock()->SetCurrentState(QBertMovementState::Disk);
 	MoveDisk();
 }
 
@@ -67,12 +67,12 @@ void DiskMovementController::FinishedMovingDisk()
 	dropOffHex     = HexNeighbor(dropOffHex, 1);
 
 	m_CurrentState = DiskMovementState::Destination;
-	m_QBertMovementController->SetCurrentState(QBertMovementState::Moving);
+	m_QBertMovementController.lock()->SetCurrentState(QBertMovementState::Moving);
 
-	m_QBertMovementController->SetCurrentHex(m_CurrentHex);
-	m_QBertMovementController->SetTargetHex(dropOffHex);
+	m_QBertMovementController.lock()->SetCurrentHex(m_CurrentHex);
+	m_QBertMovementController.lock()->SetTargetHex(dropOffHex);
 
-	m_Parent->SetActive(false);
+	m_Parent.lock()->SetActive(false);
 }
 
 void DiskMovementController::UpdateTransformPosition() const
@@ -80,7 +80,7 @@ void DiskMovementController::UpdateTransformPosition() const
 	HL_PROFILE_FUNCTION()
 	
 	const glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
-	m_Parent->GetTransform()->SetPosition(alignedPosition);
+	m_Parent.lock()->GetTransform()->SetPosition(alignedPosition);
 }
 
 void DiskMovementController::MoveTowardsTargetHex(const size_t totalTicksForMove)
@@ -89,7 +89,7 @@ void DiskMovementController::MoveTowardsTargetHex(const size_t totalTicksForMove
 	
 	const glm::vec3 currentHexPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 0.0f};
 	const glm::vec3 targetHexPosition  = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_TargetHex), 0.0f};
-	glm::vec3 currentPosition          = m_Parent->GetTransform()->GetPosition();
+	glm::vec3 currentPosition          = m_Parent.lock()->GetTransform()->GetPosition();
 
 	const glm::vec3 totalDistanceToMove = targetHexPosition - currentHexPosition;
 
@@ -108,6 +108,6 @@ void DiskMovementController::MoveTowardsTargetHex(const size_t totalTicksForMove
 	m_DistanceAlreadyMoved.x += totalDistanceToMove.x / totalTicksForMove;
 	m_DistanceAlreadyMoved.y += totalDistanceToMove.y / totalTicksForMove;
 
-	m_Parent->GetTransform()->SetPosition(currentPosition);
-	m_QBertMovementController->GetParent()->GetTransform()->SetPosition(currentPosition);
+	m_Parent.lock()->GetTransform()->SetPosition(currentPosition);
+	m_QBertMovementController.lock()->GetParent().lock()->GetTransform()->SetPosition(currentPosition);
 }

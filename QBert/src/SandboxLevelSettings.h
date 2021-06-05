@@ -21,10 +21,12 @@ struct SandboxLevelSettings
 						 const int ticksPerMove,
 						 const float initialZoomLevel,
 						 const std::string& qBertTexture,
-						 const std::string& testTileTexture,
+						 const std::string& tileTexture,
+						 const std::string& alternateTileTexture,
 						 const std::string& diskTexture,
 						 const glm::vec2& testTileSpriteSize,
 						 const glm::vec2& qBertSpritePositionOffset,
+						 const glm::vec3& initialQBertPosition,
 						 const glm::vec3& startingHexPosition,
 						 const glm::vec4& clearColor)
 		: PyramidWidth(pyramidWidth),
@@ -36,10 +38,12 @@ struct SandboxLevelSettings
 		  TicksPerMove(ticksPerMove),
 		  InitialZoomLevel(initialZoomLevel),
 		  QBertTexture(qBertTexture),
-		  TestTileTexture(testTileTexture),
+		  TileTexture(tileTexture),
+		  AlternateTileTexture(alternateTileTexture),
 		  DiskTexture(diskTexture),
 		  TestTileSpriteSize(testTileSpriteSize),
 		  QBertSpritePositionOffset(qBertSpritePositionOffset),
+		  InitialQBertPosition(initialQBertPosition),
 		  CameraHexPosition(startingHexPosition),
 		  ClearColor(clearColor)
 	{
@@ -56,7 +60,8 @@ struct SandboxLevelSettings
 	float InitialZoomLevel;
 
 	std::string QBertTexture;
-	std::string TestTileTexture;
+	std::string TileTexture;
+	std::string AlternateTileTexture;
 	std::string DiskTexture;
 
 	glm::vec2 TestTileSpriteSize;
@@ -75,7 +80,8 @@ struct SandboxLevelSettings
 								   TicksPerMove,
 								   InitialZoomLevel,
 								   QBertTexture,
-								   TestTileTexture,
+								   TileTexture,
+								   AlternateTileTexture,
 								   DiskTexture,
 								   TestTileSpriteSize,
 								   QBertSpritePositionOffset,

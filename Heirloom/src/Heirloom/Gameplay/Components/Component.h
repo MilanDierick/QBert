@@ -14,10 +14,10 @@ namespace Heirloom
 	public:
 		virtual ~Component() = default;
 
+		virtual WeakRef<GameObject> GetParent() const = 0;
+		virtual void SetParent(Ref<GameObject> gameObject) = 0;
+		
 		virtual void Update(Timestep ts) = 0;
 		virtual void Render() = 0;
-
-		virtual GameObject* GetParent() const = 0;
-		virtual void SetParent(GameObject* gameObject) = 0;
 	};
 }

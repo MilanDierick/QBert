@@ -310,6 +310,8 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClInclude Include="src\Components\DiskMovementController.h" />
     <ClInclude Include="src\Components\HealthComponent.h" />
     <ClInclude Include="src\Components\QBertMovementController.h" />
+    <ClInclude Include="src\Components\TileComponent.h" />
+    <ClInclude Include="src\EventArgs.h" />
     <ClInclude Include="src\ExternalJsonTypeParserDefinitions.h" />
     <ClInclude Include="src\HexagonalGrid\Hexagon.h" />
     <ClInclude Include="src\HexagonalGrid\HexagonalGrid.h" />
@@ -323,6 +325,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClCompile Include="src\Components\DiskMovementController.cpp" />
     <ClCompile Include="src\Components\HealthComponent.cpp" />
     <ClCompile Include="src\Components\QBertMovementController.cpp" />
+    <ClCompile Include="src\Components\TileComponent.cpp" />
     <ClCompile Include="src\QBertApplication.cpp" />
     <ClCompile Include="src\SandboxScene.cpp" />
   </ItemGroup>

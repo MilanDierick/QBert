@@ -5,6 +5,7 @@
 #include "Components/DiskMovementController.h"
 #include "Components/HealthComponent.h"
 #include "Components/QBertMovementController.h"
+#include "Components/TileComponent.h"
 #include "HexagonalGrid/HexagonalGrid.h"
 
 #define PYRAMID_WIDTH 7
@@ -20,8 +21,10 @@ SandboxScene::SandboxScene(const std::string& sceneName)
 void SandboxScene::OnLoad()
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	HL_INFO("Loading SandboxScene...");
+
+	CreatePyramid(Configuration.PyramidWidth);
 
 	const auto qbert1Texture = Texture2D::Create(Configuration.QBertTexture);
 
@@ -43,14 +46,9 @@ void SandboxScene::OnLoad()
 		Hex(static_cast<int>(Configuration.InitialQBertPosition.x),
 			static_cast<int>(Configuration.InitialQBertPosition.y),
 			-static_cast<int>(Configuration.InitialQBertPosition.z)),
-		qbertGameObject.get(),
-		Heirloom::CreateRef<std::unordered_set<Hex>>(m_Grid)));
+		qbertGameObject));
 
-	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{
-		0.0f,
-		m_HexagonalGridLayout.Size.y * 1.25f,
-		-1.0f
-	});
+	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.25f, -1.0f});
 
 	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
 
@@ -74,26 +72,15 @@ void SandboxScene::OnLoad()
 																	0,
 																	250,
 																	CreateRef<std::unordered_set<Hex>>(m_Grid),
-																	disk1GameObject.get()));
-
-	// disk1SpriteRenderer->SetSpriteOffset(glm::vec3{
-	// 	m_HexagonalGridLayout.Size.x - Configuration.QBertSpritePositionOffset.x,
-	// 	m_HexagonalGridLayout.Size.y * Configuration.QBertSpritePositionOffset.y - 1,
-	// 	0.0f
-	// });
+																	disk1GameObject));
 
 	m_GameObjects.push_back(disk1GameObject);
-
-	CreatePyramid(Configuration.PyramidWidth);
 
 	// This mess is to center the pyramid in the viewport, can this be made easier?
 	const Hex hex = *m_Grid.find(Hex(static_cast<int>(Configuration.CameraHexPosition.x),
 									 static_cast<int>(Configuration.CameraHexPosition.y),
 									 static_cast<int>(Configuration.CameraHexPosition.z)));
-	glm::vec3 finalCameraPosition = glm::vec3(HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hex), 0.0f) + glm::vec3(
-		0.0f,
-		0.0f,
-		0.0f);
+	glm::vec3 finalCameraPosition = glm::vec3(HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hex), 0.0f);
 	m_CameraController.SetCameraPosition(finalCameraPosition);
 	m_CameraController.SetZoomLevel(Configuration.InitialZoomLevel);
 
@@ -103,7 +90,7 @@ void SandboxScene::OnLoad()
 void SandboxScene::OnUnload()
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	HL_INFO("Unloading SandboxScene...");
 }
 
@@ -130,7 +117,7 @@ void SandboxScene::OnUpdate()
 void SandboxScene::OnRender()
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	RenderCommand::SetClearColor(Configuration.ClearColor);
 	RenderCommand::Clear();
 
@@ -158,7 +145,7 @@ void SandboxScene::OnImGuiRender()
 void SandboxScene::ReadConfigFile()
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	Json json;
 
 	std::ifstream input;
@@ -172,8 +159,9 @@ void SandboxScene::ReadConfigFile()
 void SandboxScene::CreatePyramid(const int pyramidSize)
 {
 	HL_PROFILE_FUNCTION()
-	
-	const auto testTileTexture = Texture2D::Create(Configuration.TestTileTexture);
+
+	const auto tileTexture          = Texture2D::Create(Configuration.TileTexture);
+	const auto alternateTileTexture = Texture2D::Create(Configuration.AlternateTileTexture);
 
 	for (int q = 0; q < pyramidSize; q++)
 	{
@@ -182,20 +170,30 @@ void SandboxScene::CreatePyramid(const int pyramidSize)
 
 	for (Hex hexagon : m_Grid)
 	{
-		Ref<GameObject> gameObject         = Heirloom::CreateRef<GameObject>(this);
-		Ref<SpriteRenderer> spriteRenderer = gameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
-		Ref<Sprite> sprite                 = Heirloom::CreateRef<Sprite>();
+		Ref<Sprite> sprite          = Heirloom::CreateRef<Sprite>();
+		Ref<Sprite> alternateSprite = Heirloom::CreateRef<Sprite>();
 
 		sprite->Position     = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f};
 		sprite->Rotation     = 0.0f;
 		sprite->Size         = Configuration.TestTileSpriteSize;
-		sprite->Texture      = testTileTexture;
+		sprite->Texture      = tileTexture;
 		sprite->TilingFactor = 1.0f;
 		sprite->TintColor    = glm::vec4(1.0f);
 
+		alternateSprite->Position     = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f};
+		alternateSprite->Rotation     = 0.0f;
+		alternateSprite->Size         = Configuration.TestTileSpriteSize;
+		alternateSprite->Texture      = alternateTileTexture;
+		alternateSprite->TilingFactor = 1.0f;
+		alternateSprite->TintColor    = glm::vec4(1.0f);
+
+		Ref<GameObject> gameObject         = Heirloom::CreateRef<GameObject>(this);
+		Ref<SpriteRenderer> spriteRenderer = gameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
+		gameObject->
+			AddComponent(Heirloom::CreateRef<TileComponent>(hexagon, gameObject, sprite, alternateSprite, true));
+
 		gameObject->GetTransform()->SetPosition({HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hexagon), 0.0f});
 		spriteRenderer->SetSprite(sprite);
-		// spriteRenderer->SetSpriteOffset(glm::vec3{5.0f, 0.0f, 0.0f});
 
 		m_GameObjects.push_back(gameObject);
 	}

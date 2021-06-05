@@ -28,13 +28,13 @@ public:
 										 size_t ticksSinceLastMove,
 										 size_t ticksPerMove,
 										 Heirloom::Ref<std::unordered_set<Hex>> hexagons,
-										 Heirloom::GameObject* parent);
+										 Heirloom::Ref<Heirloom::GameObject> parent);
 
-	[[nodiscard]] Heirloom::GameObject* GetParent() const override { return m_Parent; }
-	void SetParent(Heirloom::GameObject* const parent) override { m_Parent = parent; }
+	[[nodiscard]] Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override { return m_Parent; }
+	void SetParent(Heirloom::Ref<Heirloom::GameObject> const parent) override { m_Parent = parent; }
 	[[nodiscard]] Hex GetCurrentHex() const { return m_CurrentHex; }
 
-	void SetQBertMovementController(QBertMovementController* qBertMovementController)
+	void SetQBertMovementController(Heirloom::WeakRef<QBertMovementController> qBertMovementController)
 	{
 		m_QBertMovementController = qBertMovementController;
 	}
@@ -52,10 +52,10 @@ private:
 	glm::vec3 m_DistanceAlreadyMoved;
 	DiskMovementState m_CurrentState;
 
-	QBertMovementController* m_QBertMovementController = nullptr;
+	Heirloom::WeakRef<QBertMovementController> m_QBertMovementController = Heirloom::Ref<QBertMovementController>(nullptr);
 	Heirloom::Ref<std::unordered_set<Hex>> m_Hexagons;
 
-	Heirloom::GameObject* m_Parent;
+	Heirloom::WeakRef<Heirloom::GameObject> m_Parent;
 
 	void StartMovingDisk();
 	void MoveDisk();

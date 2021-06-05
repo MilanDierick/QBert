@@ -2,13 +2,13 @@
 
 #include "DiskMovementController.h"
 #include "SandboxScene.h"
+#include "TileComponent.h"
 #include "HexagonalGrid/HexagonalGrid.h"
 
 QBertMovementController::QBertMovementController(const size_t ticksBetweenMoves,
 												 size_t ticksPerMove,
 												 Hex currentHex,
-												 Heirloom::GameObject* parent,
-												 const Heirloom::Ref<std::unordered_set<Hex>> hexagons)
+												 Heirloom::WeakRef<Heirloom::GameObject> parent)
 	: m_CurrentHex(currentHex),
 	  m_TargetHex(currentHex),
 	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}}),
@@ -18,18 +18,23 @@ QBertMovementController::QBertMovementController(const size_t ticksBetweenMoves,
 	  m_Parent(parent)
 {
 	HL_PROFILE_FUNCTION()
-	
-	m_Hexagons             = hexagons;
+
 	OutOfBoundsEvent       = Heirloom::Event<OutOfBoundsEventArgs>();
 	m_DistanceAlreadyMoved = glm::vec3(0.0f);
 	UpdateTransformPosition();
+	RegisterMovableHexPositionChangedEventForAllTiles();
 	Heirloom::Input::KeyPressedEvent += HL_BIND_EVENT_FN(QBertMovementController::OnKeyPressedEvent);
+
+	// Invoke when we create this controller to make sure the starting tile is occupied upon starting the game
+	const HexPositionChangedEventArgs args = HexPositionChangedEventArgs(m_CurrentHex, TileState::Occupied);
+		
+	HexPositionChangedEvent.Invoke(args);
 }
 
 void QBertMovementController::Update(Heirloom::Timestep ts)
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	UNREFERENCED_PARAMETER(ts);
 
 	if (m_CurrentState == QBertMovementState::Disk)
@@ -58,18 +63,19 @@ void QBertMovementController::SetCurrentHex(const Hex& currentHex) { m_CurrentHe
 bool QBertMovementController::CheckIfOnDisk()
 {
 	HL_PROFILE_FUNCTION()
-	
-	std::vector<Heirloom::Ref<Heirloom::GameObject>> gameObjects = m_Parent->GetCurrentScene()->GetGameObjects();
-	
+
+	std::vector<Heirloom::Ref<Heirloom::GameObject>> gameObjects = m_Parent.lock()->GetCurrentScene()->GetGameObjects();
+
 	for (Heirloom::Ref<Heirloom::GameObject> gameObject : gameObjects)
 	{
 		Heirloom::Ref<DiskMovementController> diskController = gameObject->GetComponent<DiskMovementController>();
-		
+
 		if (diskController)
 		{
-			if (diskController->GetCurrentHex().Q == m_CurrentHex.Q && diskController->GetCurrentHex().R == m_CurrentHex.R)
+			if (diskController->GetCurrentHex().Q == m_CurrentHex.Q && diskController->GetCurrentHex().R == m_CurrentHex
+				.R)
 			{
-				diskController->SetQBertMovementController(this);
+				diskController->SetQBertMovementController(shared_from_this());
 				return true;
 			}
 		}
@@ -81,10 +87,10 @@ bool QBertMovementController::CheckIfOnDisk()
 void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMove)
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	const glm::vec3 currentHexPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 0.0f};
 	const glm::vec3 targetHexPosition  = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_TargetHex), 0.0f};
-	glm::vec3 currentPosition          = m_Parent->GetTransform()->GetPosition();
+	glm::vec3 currentPosition          = m_Parent.lock()->GetTransform()->GetPosition();
 
 	const glm::vec3 totalDistanceToMove = targetHexPosition - currentHexPosition;
 
@@ -94,6 +100,10 @@ void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMov
 		m_CurrentHex           = m_TargetHex;
 		m_DistanceAlreadyMoved = glm::vec3(0.0f);
 		UpdateTransformPosition();
+
+		const HexPositionChangedEventArgs args = HexPositionChangedEventArgs(m_CurrentHex, TileState::Occupied);
+		
+		HexPositionChangedEvent.Invoke(args);
 
 		if (!CheckIfWithinBounds())
 		{
@@ -112,30 +122,42 @@ void QBertMovementController::MoveTowardsTargetHex(const size_t totalTicksForMov
 	m_DistanceAlreadyMoved.x += totalDistanceToMove.x / totalTicksForMove;
 	m_DistanceAlreadyMoved.y += totalDistanceToMove.y / totalTicksForMove;
 
-	m_Parent->GetTransform()->SetPosition(currentPosition);
+	m_Parent.lock()->GetTransform()->SetPosition(currentPosition);
 }
 
 void QBertMovementController::UpdateTransformPosition() const
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	const glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
-	m_Parent->GetTransform()->SetPosition(alignedPosition);
+	m_Parent.lock()->GetTransform()->SetPosition(alignedPosition);
 }
 
 bool QBertMovementController::CheckIfWithinBounds() const
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	if (std::abs(m_CurrentHex.Q - -m_CurrentHex.R) > SandboxScene::Configuration.PyramidWidth - 1 || m_CurrentHex.Q < 0
 		|| m_CurrentHex.R < 0) return false;
 	return true;
 }
 
+void QBertMovementController::RegisterMovableHexPositionChangedEventForAllTiles()
+{
+	std::vector<Heirloom::Ref<Heirloom::GameObject>> gameObjects = m_Parent.lock()->GetCurrentScene()->GetGameObjects();
+
+	for (Heirloom::Ref<Heirloom::GameObject> gameObject : gameObjects)
+	{
+		Heirloom::Ref<TileComponent> tileComponent = gameObject->GetComponent<TileComponent>();
+
+		if (tileComponent) { tileComponent->RegisterMovableObjectHexPositionChangedEvent(HexPositionChangedEvent); }
+	}
+}
+
 void QBertMovementController::OnKeyPressedEvent(const Heirloom::KeyPressedEventArgs args)
 {
 	HL_PROFILE_FUNCTION()
-	
+
 	if (m_TicksSinceLastMove < m_TicksBetweenMoves) return;
 
 	if (args.KeyCode == HL_KEY_KP_1)

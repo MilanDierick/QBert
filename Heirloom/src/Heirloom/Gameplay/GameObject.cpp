@@ -7,6 +7,8 @@ namespace Heirloom
 	GameObject::GameObject(Scene* currentScene)
 		: m_Active(true), m_CurrentScene(currentScene)
 	{
+		const Ref<Transform> transform = CreateRef<Transform>(nullptr);
+		m_Transform = transform;
 	}
 
 	GameObject::~GameObject()

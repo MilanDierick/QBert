@@ -1,13 +1,12 @@
 #include "hlpch.h"
 #include "SpriteRenderer.h"
 
-#include "glad/glad.h"
 #include "Heirloom/Gameplay/GameObject.h"
 #include "Heirloom/Renderer/Renderer2D.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
 
 Heirloom::SpriteRenderer::SpriteRenderer()
-	: m_SpriteOffset(0.0f), m_Parent(nullptr)
+	: m_SpriteOffset(0.0f), m_Parent(Ref<GameObject>(nullptr))
 {
 }
 
@@ -19,7 +18,7 @@ void Heirloom::SpriteRenderer::Update(Timestep ts)
 {
 	UNREFERENCED_PARAMETER(ts);
 
-	m_Sprite->Position = m_Parent->GetTransform()->GetPosition();
+	m_Sprite->Position = m_Parent.lock()->GetTransform()->GetPosition();
 }
 
 void Heirloom::SpriteRenderer::Render()
