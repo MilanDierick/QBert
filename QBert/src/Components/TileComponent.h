@@ -7,7 +7,7 @@
 #include "IScoreSource.h"
 #include "HexagonalGrid/Hexagon.h"
 
-struct HexPositionChangedEventArgs;
+struct HexChangedEventArgs;
 struct TileStateChangedEventArgs;
 
 enum class TileState
@@ -33,7 +33,7 @@ public:
 	void Update(Heirloom::Timestep ts) override;
 	void Render() override;
 
-	void RegisterMovableObjectHexPositionChangedEvent(Heirloom::Event<HexPositionChangedEventArgs>& event);
+	void RegisterMovableObjectHexPositionChangedEvent(Heirloom::Event<HexChangedEventArgs>& event);
 
 private:
 	bool m_FirstOccupation;
@@ -46,7 +46,7 @@ private:
 	Heirloom::Ref<Heirloom::Sprite> m_Sprite;
 	Heirloom::Ref<Heirloom::Sprite> m_AlternateSprite;
 
-	void OnMovableObjectHexPositionChanged(HexPositionChangedEventArgs args);
+	void OnMovableObjectHexPositionChanged(HexChangedEventArgs args);
 	void ChangeTileState(TileState newState);
 	void ChangeTileSprite();
 };

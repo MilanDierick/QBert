@@ -31,12 +31,12 @@ void TileComponent::Render()
 {
 }
 
-void TileComponent::RegisterMovableObjectHexPositionChangedEvent(Heirloom::Event<HexPositionChangedEventArgs>& event)
+void TileComponent::RegisterMovableObjectHexPositionChangedEvent(Heirloom::Event<HexChangedEventArgs>& event)
 {
 	event += HL_BIND_EVENT_FN(TileComponent::OnMovableObjectHexPositionChanged);
 }
 
-void TileComponent::OnMovableObjectHexPositionChanged(const HexPositionChangedEventArgs args)
+void TileComponent::OnMovableObjectHexPositionChanged(const HexChangedEventArgs args)
 {
 	if (!(args.NewHex.Q == m_CurrentHex.Q && args.NewHex.R == m_CurrentHex.R)) return;
 
