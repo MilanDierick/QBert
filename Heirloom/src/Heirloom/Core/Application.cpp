@@ -22,6 +22,8 @@ namespace Heirloom
 		HL_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
+		srand(static_cast<unsigned int>(time(nullptr)));
+		
 		m_Window = std::unique_ptr<Window>(Window::Create());
 
 		m_Window->WindowResizedEvent += HL_BIND_EVENT_FN(Application::OnWindowResizedEvent);

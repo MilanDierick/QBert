@@ -6,9 +6,8 @@
 #include <unordered_set>
 
 #include "Heirloom.h"
+#include "MovementController.h"
 #include "HexagonalGrid/Hexagon.h"
-#include "HexagonalGrid/HexagonalGrid.h"
-#include "HexagonalGrid/Layout.h"
 
 class QBertMovementController;
 
@@ -19,40 +18,26 @@ enum class DiskMovementState
 	Destination
 };
 
-class DiskMovementController final : public Heirloom::Component
+class DiskMovementController final : public Heirloom::Component, public MovementController
 {
 public:
-	[[nodiscard]] DiskMovementController(Hex currentHex,
-										 Layout hexagonalGridLayout,
-										 size_t ticksBetweenMoves,
-										 size_t ticksSinceLastMove,
-										 size_t ticksPerMove,
+	[[nodiscard]] DiskMovementController(MovementControllerData data,
+										 TileState preferredTileState,
 										 Heirloom::Ref<std::unordered_set<Hex>> hexagons,
-										 Heirloom::Ref<Heirloom::GameObject> parent);
+										 Heirloom::WeakRef<Heirloom::Transform> transform,
+										 Heirloom::WeakRef<Heirloom::GameObject> parent);
 
-	[[nodiscard]] Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override { return m_Parent; }
-	void SetParent(Heirloom::Ref<Heirloom::GameObject> const parent) override { m_Parent = parent; }
-	[[nodiscard]] Hex GetCurrentHex() const { return m_CurrentHex; }
-
-	void SetQBertMovementController(Heirloom::WeakRef<QBertMovementController> qBertMovementController)
-	{
-		m_QBertMovementController = qBertMovementController;
-	}
+	[[nodiscard]] Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override;
+	void SetParent(Heirloom::Ref<Heirloom::GameObject> parent) override;
+	void SetQBertMovementController(Heirloom::WeakRef<QBertMovementController> qBertMovementController);
 
 	void Update(Heirloom::Timestep ts) override;
 	void Render() override;
 
 private:
-	Hex m_CurrentHex;
-	Hex m_TargetHex;
-	Layout m_HexagonalGridLayout;
-	size_t m_TicksBetweenMoves;
-	size_t m_TicksSinceLastMove;
-	size_t m_TicksPerMove;
-	glm::vec3 m_DistanceAlreadyMoved;
 	DiskMovementState m_CurrentState;
 
-	Heirloom::WeakRef<QBertMovementController> m_QBertMovementController = Heirloom::Ref<QBertMovementController>(nullptr);
+	Heirloom::WeakRef<QBertMovementController> m_QBertMovementController;
 	Heirloom::Ref<std::unordered_set<Hex>> m_Hexagons;
 
 	Heirloom::WeakRef<Heirloom::GameObject> m_Parent;
@@ -60,6 +45,4 @@ private:
 	void StartMovingDisk();
 	void MoveDisk();
 	void FinishedMovingDisk();
-	void UpdateTransformPosition() const;
-	void MoveTowardsTargetHex(size_t totalTicksForMove);
 };

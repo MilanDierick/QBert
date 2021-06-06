@@ -2,6 +2,7 @@
 #include "SandboxScene.h"
 
 #include "SandboxLevelSettings.h"
+#include "Components/CoilyEggMovementController.h"
 #include "Components/DiskMovementController.h"
 #include "Components/HealthComponent.h"
 #include "Components/QBertMovementController.h"
@@ -30,15 +31,11 @@ void SandboxScene::OnLoad()
 
 	CreatePyramid(Configuration.PyramidWidth);
 
+	#pragma region QBertGameObject
 	const auto qbert1Texture = Texture2D::Create(Configuration.QBertTexture);
 
-	const auto qbertSprite = Heirloom::CreateRef<Sprite>(Sprite(glm::vec3(0.0f, 0.0f, -1.0f),
-																glm::vec2(1.0f),
-																0.0f,
-																qbert1Texture,
-																1.0f,
-																glm::vec4(1.0f)));
-	auto qbertGameObject      = Heirloom::CreateRef<GameObject>(this);
+	const auto qbertSprite = Heirloom::CreateRef<Sprite>(qbert1Texture);
+	auto qbertGameObject   = Heirloom::CreateRef<GameObject>(this);
 	qbertGameObject->GetTransform()->SetParent(qbertGameObject);
 	auto qbertSpriteRenderer  = qbertGameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
 	auto qbertHealthComponent = qbertGameObject->AddComponent(
@@ -46,44 +43,66 @@ void SandboxScene::OnLoad()
 
 	qbertSpriteRenderer->SetSprite(qbertSprite);
 
-	MovementControllerData data = ReadFileToJson<MovementControllerData>(
+	MovementControllerData qBertData = ReadFileToJson<MovementControllerData>(
 		"assets/levels/sandbox/QBertMovementControllerData.json");
 
 	const auto movementController = qbertGameObject->AddComponent(
-		Heirloom::CreateRef<QBertMovementController>(data, qbertGameObject));
+		Heirloom::CreateRef<QBertMovementController>(qBertData, qbertGameObject));
 
 	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.25f, -1.0f});
 
 	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
 
+	m_GameObjects.push_back(qbertGameObject);
+	#pragma endregion
+
+	#pragma region DiskGameObject
+	MovementControllerData diskData = ReadFileToJson<MovementControllerData>(
+		"assets/levels/sandbox/DiskMovementControllerData.json");
+
 	const Ref<Texture2D> diskTexture = Texture2D::Create(Configuration.DiskTexture);
 
-	const Ref<Sprite> diskSprite = CreateRef<Sprite>(Sprite(glm::vec3(0.0f, 0.0f, -1.0f),
-															glm::vec2(1.0f),
-															0.0f,
-															diskTexture,
-															1.0f,
-															glm::vec4(1.0f)));
+	const Ref<Sprite> diskSprite = CreateRef<Sprite>(diskTexture);
 
 	Ref<GameObject> disk1GameObject         = CreateRef<GameObject>(this);
 	Ref<SpriteRenderer> disk1SpriteRenderer = disk1GameObject->AddComponent(CreateRef<SpriteRenderer>());
 
 	disk1SpriteRenderer->SetSprite(diskSprite);
 
-	disk1GameObject->AddComponent(CreateRef<DiskMovementController>(Hex(5, 2, -7),
-																	m_HexagonalGridLayout,
-																	0,
-																	0,
-																	250,
+	disk1GameObject->AddComponent(CreateRef<DiskMovementController>(diskData,
+																	TileState::Clear,
 																	CreateRef<std::unordered_set<Hex>>(m_Grid),
+																	disk1GameObject->GetTransform(),
 																	disk1GameObject));
 
 	m_GameObjects.push_back(disk1GameObject);
+	#pragma endregion
 
+	#pragma region CoilyEggGameObject
+	MovementControllerData coilyEggData = ReadFileToJson<MovementControllerData>(
+		"assets/levels/sandbox/CoilyEggMovementControllerData.json");
+
+	const auto coilyEggTexture = Texture2D::Create("assets/textures/CoilyEggTexture.png");
+	const auto coilyEggSprite  = Heirloom::CreateRef<Sprite>(coilyEggTexture);
+
+	auto coilyEggGameObject                         = CreateRef<GameObject>(this);
+	
+	coilyEggGameObject->AddComponent(
+		CreateRef<CoilyEggMovementController>(coilyEggData, TileState::Clear, coilyEggGameObject));
+
+	auto coilyEggSpriteRenderer = coilyEggGameObject->AddComponent(CreateRef<SpriteRenderer>());
+	coilyEggSpriteRenderer->SetSprite(coilyEggSprite);
+	coilyEggSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.10f, -1.0f});
+
+	m_GameObjects.push_back(coilyEggGameObject);
+	#pragma endregion
+
+	#pragma region ScoreGameObject
 	Ref<GameObject> scoreObject = CreateRef<GameObject>(this);
 	scoreObject->AddComponent(CreateRef<ScoreComponent>(scoreObject, 0));
 
 	m_GameObjects.push_back(scoreObject);
+	#pragma endregion
 
 	// This mess is to center the pyramid in the viewport, can this be made easier?
 	const Hex hex = *m_Grid.find(Hex(static_cast<int>(Configuration.CameraHexPosition.x),
@@ -92,8 +111,6 @@ void SandboxScene::OnLoad()
 	glm::vec3 finalCameraPosition = glm::vec3(HexagonalGrid::HexToPixel(m_HexagonalGridLayout, hex), 0.0f);
 	m_CameraController.SetCameraPosition(finalCameraPosition);
 	m_CameraController.SetZoomLevel(Configuration.InitialZoomLevel);
-
-	m_GameObjects.push_back(qbertGameObject);
 }
 
 void SandboxScene::OnUnload()

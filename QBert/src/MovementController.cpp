@@ -12,7 +12,7 @@ MovementController::MovementController(const MovementControllerData data,
 	  m_TargetHex(data.TargetHex),
 	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}}),
 	  m_TicksBetweenMoves(data.TicksBetweenMoves),
-	  m_TicksSinceLastMove(0),
+	  m_TicksSinceLastMove(data.TicksBetweenMoves),
 	  m_TicksPerMove(data.TicksPerMove),
 	  m_DistanceAlreadyMoved(0.0f),
 	  m_PreferredTileState(preferredTileState),
@@ -86,6 +86,8 @@ Hex MovementController::GetHexInDirection(const Hex origin, MovementDirection di
 
 void MovementController::SetTargetHexInDirection(const MovementDirection direction)
 {
+	if (m_TicksSinceLastMove < m_TicksBetweenMoves) { return; };
+	
 	m_TargetHex = GetHexInDirection(m_CurrentHex, direction);
 
 	m_TicksSinceLastMove = 0;
