@@ -4,7 +4,7 @@
   "AspectRatioHeight": 960.0,
   "MaximumHealth": 3,
   "StartHealth": 3,
-  "TicksBetweenMoves": 100,
+  "TicksBetweenMoves": 75,
   "TicksPerMove": 50,
   "ScorePerOccupiedTile": 50,
   "ScorePerDiskLeft": 150,

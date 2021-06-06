@@ -32,6 +32,8 @@ struct Hexagon
 		S = other.S;
 		return *this;
 	}
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Hexagon, Q, R, S);
 };
 
 typedef Hexagon<int, 1> Hex;

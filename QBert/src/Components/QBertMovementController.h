@@ -3,13 +3,8 @@
 // Solution: QBert
 
 #pragma once
-#include <unordered_set>
-
 #include "Heirloom.h"
-#include "EventArgs.h"
-
-#include "HexagonalGrid/Hexagon.h"
-#include "HexagonalGrid/Layout.h"
+#include "MovementController.h"
 
 enum class QBertMovementState
 {
@@ -19,45 +14,28 @@ enum class QBertMovementState
 	Floating
 };
 
-class QBertMovementController final : public Heirloom::Component, public std::enable_shared_from_this<QBertMovementController>
+class QBertMovementController final : public Heirloom::Component,
+									  public MovementController,
+									  public std::enable_shared_from_this<QBertMovementController>
 {
 public:
-	[[nodiscard]] explicit QBertMovementController(size_t ticksBetweenMoves,
-												   size_t ticksPerMove,
-												   Hex currentHex,
+	[[nodiscard]] explicit QBertMovementController(MovementControllerData data,
 												   Heirloom::WeakRef<Heirloom::GameObject> parent);
 
-	Heirloom::Event<HexPositionChangedEventArgs> HexPositionChangedEvent;
-	Heirloom::Event<OutOfBoundsEventArgs> OutOfBoundsEvent;
-
-	[[nodiscard]] Hex& GetCurrentHex();
-	void SetCurrentHex(const Hex& currentHex);
-	Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override { return m_Parent; }
-	void SetParent(Heirloom::Ref<Heirloom::GameObject> gameObject) override { m_Parent = gameObject; }
-	[[nodiscard]] QBertMovementState& GetCurrentState() { return m_CurrentState; }
-	void SetCurrentState(const QBertMovementState currentState) { m_CurrentState = currentState; }
-	[[nodiscard]] Hex GetTargetHex() const { return m_TargetHex; }
-	void SetTargetHex(const Hex targetHex) { m_TargetHex = targetHex; }
+	[[nodiscard]] QBertMovementState GetCurrentState() const;
+	void SetCurrentState(QBertMovementState currentState);
+	Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override;
+	void SetParent(Heirloom::Ref<Heirloom::GameObject> gameObject) override;
 
 	void Update(Heirloom::Timestep ts) override;
 	void Render() override;
 
 private:
-	Hex m_CurrentHex;
-	Hex m_TargetHex;
-	Layout m_HexagonalGridLayout;
-	size_t m_TicksBetweenMoves;
-	size_t m_TicksSinceLastMove;
-	size_t m_TicksPerMove;
-	glm::vec3 m_DistanceAlreadyMoved;
 	QBertMovementState m_CurrentState;
 
 	Heirloom::WeakRef<Heirloom::GameObject> m_Parent;
 
 	bool CheckIfOnDisk();
-	void MoveTowardsTargetHex(size_t totalTicksForMove);
-	void UpdateTransformPosition() const;
-	bool CheckIfWithinBounds() const;
 	void RegisterMovableHexPositionChangedEventForAllTiles();
 	void OnKeyPressedEvent(Heirloom::KeyPressedEventArgs args);
 };

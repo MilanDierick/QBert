@@ -19,10 +19,10 @@ struct ScoreSourceEventArgs : Heirloom::EventArgs
 	ScoreSource ScoreSource;
 };
 
-struct HexPositionChangedEventArgs : Heirloom::EventArgs
+struct HexChangedEventArgs : Heirloom::EventArgs
 {
-	[[nodiscard]] explicit HexPositionChangedEventArgs(const Hex newHex, const TileState requestTileState)
-		: NewHex(newHex), RequestedTileState(requestTileState)
+	[[nodiscard]] explicit HexChangedEventArgs(const Hex newHex, const TileState requestedTileState)
+		: NewHex(newHex), RequestedTileState(requestedTileState)
 	{
 	}
 
@@ -32,6 +32,12 @@ struct HexPositionChangedEventArgs : Heirloom::EventArgs
 
 struct OutOfBoundsEventArgs : Heirloom::EventArgs
 {
+	[[nodiscard]] explicit OutOfBoundsEventArgs(const Hex hexagon)
+		: Hexagon(hexagon)
+	{
+	}
+
+	Hex Hexagon;
 };
 
 struct TileStateChangedEventArgs : Heirloom::EventArgs

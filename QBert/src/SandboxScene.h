@@ -26,6 +26,10 @@ public:
 
 private:
 	void ReadConfigFile();
+
+	template <typename T>
+	static nlohmann::json ReadFileToJson(std::string fileName);
+
 	void CreatePyramid(int pyramidSize);
 
 	CenteredCameraController m_CameraController;
@@ -33,3 +37,18 @@ private:
 
 	std::unordered_set<Hex> m_Grid;
 };
+
+template <typename T>
+nlohmann::json SandboxScene::ReadFileToJson(const std::string fileName)
+{
+	HL_PROFILE_FUNCTION()
+
+	nlohmann::json json;
+
+	std::ifstream input;
+	input.open(fileName);
+	input >> json;
+	input.close();
+
+	return json.get<T>();
+}

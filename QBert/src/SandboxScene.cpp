@@ -17,7 +17,10 @@ using namespace Heirloom;
 SandboxScene::SandboxScene(const std::string& sceneName)
 	: Scene(sceneName),
 	  m_CameraController(1280.0f / 960.0f),
-	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}}) { ReadConfigFile(); }
+	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}})
+{
+	Configuration = ReadFileToJson<SandboxLevelSettings>("assets/configs/SandboxConfig.json");
+}
 
 void SandboxScene::OnLoad()
 {
@@ -41,13 +44,12 @@ void SandboxScene::OnLoad()
 		Heirloom::CreateRef<HealthComponent>(Configuration.MaximumHealth, Configuration.StartHealth));
 
 	qbertSpriteRenderer->SetSprite(qbertSprite);
-	const auto movementController = qbertGameObject->AddComponent(Heirloom::CreateRef<QBertMovementController>(
-		Configuration.TicksBetweenMoves,
-		Configuration.TicksPerMove,
-		Hex(static_cast<int>(Configuration.InitialQBertPosition.x),
-			static_cast<int>(Configuration.InitialQBertPosition.y),
-			-static_cast<int>(Configuration.InitialQBertPosition.z)),
-		qbertGameObject));
+
+	MovementControllerData data = ReadFileToJson<MovementControllerData>(
+		"assets/levels/sandbox/QBertMovementControllerData.json");
+
+	const auto movementController = qbertGameObject->AddComponent(
+		Heirloom::CreateRef<QBertMovementController>(data, qbertGameObject));
 
 	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.25f, -1.0f});
 
