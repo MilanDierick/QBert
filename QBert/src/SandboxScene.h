@@ -9,6 +9,7 @@
 #include "EventArgs.h"
 #include "Heirloom.h"
 #include "SandboxLevelSettings.h"
+#include "Components/UAndWController.h"
 #include "HexagonalGrid/Hexagon.h"
 #include "HexagonalGrid/Layout.h"
 
@@ -32,10 +33,12 @@ private:
 	void ReadConfigFile();
 	void CreatePyramid(int pyramidSize);
 	void InitialiseGameObjectsInScene(int currentScore);
+	void SpawnUAndW();
 	void OnDamageTakenEvent(DamageTakenEventArgs args);
 
 	int m_ScoreTemp;
 	bool m_RecreateScene;
+	size_t m_RespawnTicks;
 	
 	CenteredCameraController m_CameraController;
 	Layout m_HexagonalGridLayout;

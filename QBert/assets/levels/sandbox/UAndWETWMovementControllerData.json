@@ -1,14 +1,14 @@
 ﻿{
   "CurrentHex": {
-    "Q": 0,
+    "Q": 7,
     "R": 0,
-    "S": 0
+    "S": -7
   },
   "TargetHex": {
-    "Q": 0,
+    "Q": 7,
     "R": 0,
-    "S": 0
+    "S": -7
   },
-  "TicksBetweenMoves": 150,
+  "TicksBetweenMoves": 75,
   "TicksPerMove": 50
-}
+} 

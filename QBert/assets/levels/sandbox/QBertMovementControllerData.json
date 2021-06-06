@@ -9,6 +9,6 @@
     "R": 6,
     "S": -6
   },
-  "TicksBetweenMoves": 75,
+  "TicksBetweenMoves": 100,
   "TicksPerMove": 50
 } 

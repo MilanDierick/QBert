@@ -8,6 +8,7 @@
 #include "Components/QBertMovementController.h"
 #include "Components/ScoreComponent.h"
 #include "Components/TileComponent.h"
+#include "Components/UAndWController.h"
 #include "HexagonalGrid/HexagonalGrid.h"
 
 #define PYRAMID_WIDTH 7
@@ -53,12 +54,20 @@ void SandboxScene::OnUpdate()
 {
 	HL_PROFILE_FUNCTION()
 
+	++m_RespawnTicks;
+
 	if (m_GameObjects.size() == 0 && m_RecreateScene)
 	{
 		m_RecreateScene = false;
 		InitialiseGameObjectsInScene(m_ScoreTemp);
 	}
-	
+
+	if (m_RespawnTicks >= 500)
+	{
+		SpawnUAndW();
+		m_RespawnTicks = 0;
+	}
+
 	for (const Ref<GameObject> gameObject : m_GameObjects) { gameObject->Update(Timestep{0.016f}); }
 
 	const auto newEndIterator = std::ranges::remove_if(m_GameObjects,
@@ -239,6 +248,58 @@ void SandboxScene::InitialiseGameObjectsInScene(int currentScore)
 
 	m_GameObjects.push_back(scoreObject);
 	#pragma endregion
+}
+
+void SandboxScene::SpawnUAndW()
+{
+	const int randomNumber = rand() % 2;
+
+	if (randomNumber == 0)
+	{
+		#pragma region UAndWControllerETW
+		MovementControllerData uAndWETWData = ReadFileToJson<MovementControllerData>(
+			"assets/levels/sandbox/UAndWETWMovementControllerData.json");
+
+		const auto uAndWTexture = Texture2D::Create("assets/textures/UAndWTexture.png");
+		const auto uAndWSprite  = Heirloom::CreateRef<Sprite>(uAndWTexture);
+
+		auto uAndWETWGameObject = CreateRef<GameObject>(this);
+
+		uAndWETWGameObject->AddComponent(CreateRef<UAndWController>(uAndWETWData,
+																	TileState::Clear,
+																	UAndWMovementDirection::EastToWest,
+																	uAndWETWGameObject));
+
+		auto uAndWETWSpriteRenderer = uAndWETWGameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
+		uAndWETWSpriteRenderer->SetSprite(uAndWSprite);
+		uAndWETWSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.10f, -1.0f});
+
+		m_GameObjects.push_back(uAndWETWGameObject);
+		#pragma endregion
+	}
+	else
+	{
+		#pragma region UAndWControllerWTE
+		MovementControllerData uAndWWTEData = ReadFileToJson<MovementControllerData>(
+			"assets/levels/sandbox/UAndWWTEMovementControllerData.json");
+
+		const auto uAndWTexture = Texture2D::Create("assets/textures/UAndWTexture.png");
+		const auto uAndWSprite  = Heirloom::CreateRef<Sprite>(uAndWTexture);
+
+		auto uAndWETWGameObject = CreateRef<GameObject>(this);
+
+		uAndWETWGameObject->AddComponent(CreateRef<UAndWController>(uAndWWTEData,
+																	TileState::Clear,
+																	UAndWMovementDirection::WestToEast,
+																	uAndWETWGameObject));
+
+		auto uAndWETWSpriteRenderer = uAndWETWGameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
+		uAndWETWSpriteRenderer->SetSprite(uAndWSprite);
+		uAndWETWSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.10f, -1.0f});
+
+		m_GameObjects.push_back(uAndWETWGameObject);
+		#pragma endregion
+	}
 }
 
 void SandboxScene::OnDamageTakenEvent(DamageTakenEventArgs args)

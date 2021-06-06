@@ -314,6 +314,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClInclude Include="src\Components\QBertMovementController.h" />
     <ClInclude Include="src\Components\ScoreComponent.h" />
     <ClInclude Include="src\Components\TileComponent.h" />
+    <ClInclude Include="src\Components\UAndWController.h" />
     <ClInclude Include="src\EventArgs.h" />
     <ClInclude Include="src\ExternalJsonTypeParserDefinitions.h" />
     <ClInclude Include="src\HexagonalGrid\Hexagon.h" />
@@ -334,6 +335,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <ClCompile Include="src\Components\QBertMovementController.cpp" />
     <ClCompile Include="src\Components\ScoreComponent.cpp" />
     <ClCompile Include="src\Components\TileComponent.cpp" />
+    <ClCompile Include="src\Components\UAndWController.cpp" />
     <ClCompile Include="src\MovementController.cpp" />
     <ClCompile Include="src\QBertApplication.cpp" />
     <ClCompile Include="src\SandboxScene.cpp" />
@@ -353,6 +355,8 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     <Content Include="assets\levels\sandbox\CoilyMovementControllerData.json" />
     <Content Include="assets\levels\sandbox\DiskMovementControllerData.json" />
     <Content Include="assets\levels\sandbox\QBertMovementControllerData.json" />
+    <Content Include="assets\levels\sandbox\UAndWETWMovementControllerData.json" />
+    <Content Include="assets\levels\sandbox\UAndWWTEMovementControllerData.json" />
     <Content Include="assets\shaders\FlatColor.glsl" />
     <Content Include="assets\shaders\Texture.glsl" />
     <Content Include="assets\sounds\bleep.mp3" />
