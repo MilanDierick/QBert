@@ -42,4 +42,5 @@ private:
 	bool CheckIfOnDisk();
 	void RegisterMovableHexPositionChangedEventForAllTiles();
 	void OnKeyPressedEvent(Heirloom::KeyPressedEventArgs args);
+	void OnOutOfBoundsEvent(OutOfBoundsEventArgs args);
 };

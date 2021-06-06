@@ -119,3 +119,9 @@ void QBertMovementController::OnKeyPressedEvent(const Heirloom::KeyPressedEventA
 		SetTargetHexInDirection(MovementDirection::NorthEast);
 	}
 }
+
+void QBertMovementController::OnOutOfBoundsEvent(const OutOfBoundsEventArgs args)
+{
+	const DamageTakenEventArgs damageTakenEventArgs = DamageTakenEventArgs(args.Hexagon);
+	DamageTakenEvent.Invoke(damageTakenEventArgs);
+}

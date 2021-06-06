@@ -1,6 +1,7 @@
 ﻿#include "CoilyEggMovementController.h"
 
 #include "CoilyMovementController.h"
+#include "ScoreComponent.h"
 #include "TileComponent.h"
 
 CoilyEggMovementController::CoilyEggMovementController(const MovementControllerData data,
@@ -51,7 +52,7 @@ void CoilyEggMovementController::SpawnCoily()
 
 	auto coilyGameObject = CreateRef<Heirloom::GameObject>(m_Parent.lock()->GetCurrentScene());
 
-	coilyGameObject->AddComponent(CreateRef<CoilyMovementController>(coilyData, TileState::Clear, coilyGameObject));
+	auto coilyController = coilyGameObject->AddComponent(CreateRef<CoilyMovementController>(coilyData, TileState::Clear, coilyGameObject));
 
 	auto coilySpriteRenderer = coilyGameObject->AddComponent(Heirloom::CreateRef<Heirloom::SpriteRenderer>());
 	coilySpriteRenderer->SetSprite(coilySprite);
@@ -60,6 +61,15 @@ void CoilyEggMovementController::SpawnCoily()
 	m_Parent.lock()->GetCurrentScene()->GetGameObjects().push_back(coilyGameObject);
 	#pragma endregion
 
+	std::vector<Heirloom::Ref<Heirloom::GameObject>> gameObjects = m_Parent.lock()->GetCurrentScene()->GetGameObjects();
+
+	for (Heirloom::Ref<Heirloom::GameObject> gameObject : gameObjects)
+	{
+		Heirloom::Ref<ScoreComponent> scoreComponent = gameObject->GetComponent<ScoreComponent>();
+
+		if (scoreComponent) { scoreComponent->RegisterScoreSource(coilyController); }
+	}
+	
 	const CoilyEggDestroyedEventArgs args = CoilyEggDestroyedEventArgs(GetCurrentHex());
 	CoilyEggDestroyedEvent.Invoke(args);
 }

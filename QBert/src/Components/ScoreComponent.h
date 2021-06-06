@@ -4,12 +4,14 @@
 
 #pragma once
 #include "Heirloom.h"
+#include "IScoreSource.h"
 
 struct ScoreSourceEventArgs;
 
 enum class ScoreSource
 {
 	Tile,
+	Coily
 };
 
 class ScoreComponent final : public Heirloom::Component
@@ -19,9 +21,12 @@ public:
 
 	Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override;
 	void SetParent(Heirloom::Ref<Heirloom::GameObject> gameObject) override;
+	[[nodiscard]] unsigned int GetScore() const;
 
 	void Update(Heirloom::Timestep ts) override;
 	void Render() override;
+
+	void RegisterScoreSource(Heirloom::Ref<IScoreSource>);
 
 private:
 	unsigned int m_Score;

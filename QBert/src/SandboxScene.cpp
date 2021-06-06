@@ -17,6 +17,8 @@ using namespace Heirloom;
 
 SandboxScene::SandboxScene(const std::string& sceneName)
 	: Scene(sceneName),
+	  m_ScoreTemp(0),
+	  m_RecreateScene(false),
 	  m_CameraController(1280.0f / 960.0f),
 	  m_HexagonalGridLayout({ORIENTATION_POINTY, {1.0f, 0.85f}, {0.0f, 0.0f}})
 {
@@ -29,80 +31,7 @@ void SandboxScene::OnLoad()
 
 	HL_INFO("Loading SandboxScene...");
 
-	CreatePyramid(Configuration.PyramidWidth);
-
-	#pragma region QBertGameObject
-	const auto qbert1Texture = Texture2D::Create(Configuration.QBertTexture);
-
-	const auto qbertSprite = Heirloom::CreateRef<Sprite>(qbert1Texture);
-	auto qbertGameObject   = Heirloom::CreateRef<GameObject>(this);
-	qbertGameObject->GetTransform()->SetParent(qbertGameObject);
-	auto qbertSpriteRenderer  = qbertGameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
-	auto qbertHealthComponent = qbertGameObject->AddComponent(
-		Heirloom::CreateRef<HealthComponent>(Configuration.MaximumHealth, Configuration.StartHealth));
-
-	qbertSpriteRenderer->SetSprite(qbertSprite);
-
-	MovementControllerData qBertData = ReadFileToJson<MovementControllerData>(
-		"assets/levels/sandbox/QBertMovementControllerData.json");
-
-	const auto movementController = qbertGameObject->AddComponent(
-		Heirloom::CreateRef<QBertMovementController>(qBertData, qbertGameObject));
-
-	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.25f, -1.0f});
-
-	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
-
-	m_GameObjects.push_back(qbertGameObject);
-	#pragma endregion
-
-	#pragma region DiskGameObject
-	MovementControllerData diskData = ReadFileToJson<MovementControllerData>(
-		"assets/levels/sandbox/DiskMovementControllerData.json");
-
-	const Ref<Texture2D> diskTexture = Texture2D::Create(Configuration.DiskTexture);
-
-	const Ref<Sprite> diskSprite = CreateRef<Sprite>(diskTexture);
-
-	Ref<GameObject> disk1GameObject         = CreateRef<GameObject>(this);
-	Ref<SpriteRenderer> disk1SpriteRenderer = disk1GameObject->AddComponent(CreateRef<SpriteRenderer>());
-
-	disk1SpriteRenderer->SetSprite(diskSprite);
-
-	disk1GameObject->AddComponent(CreateRef<DiskMovementController>(diskData,
-																	TileState::Clear,
-																	CreateRef<std::unordered_set<Hex>>(m_Grid),
-																	disk1GameObject->GetTransform(),
-																	disk1GameObject));
-
-	m_GameObjects.push_back(disk1GameObject);
-	#pragma endregion
-
-	#pragma region CoilyEggGameObject
-	MovementControllerData coilyEggData = ReadFileToJson<MovementControllerData>(
-		"assets/levels/sandbox/CoilyEggMovementControllerData.json");
-
-	const auto coilyEggTexture = Texture2D::Create("assets/textures/CoilyEggTexture.png");
-	const auto coilyEggSprite  = Heirloom::CreateRef<Sprite>(coilyEggTexture);
-
-	auto coilyEggGameObject                         = CreateRef<GameObject>(this);
-	
-	coilyEggGameObject->AddComponent(
-		CreateRef<CoilyEggMovementController>(coilyEggData, TileState::Clear, coilyEggGameObject));
-
-	auto coilyEggSpriteRenderer = coilyEggGameObject->AddComponent(CreateRef<SpriteRenderer>());
-	coilyEggSpriteRenderer->SetSprite(coilyEggSprite);
-	coilyEggSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.10f, -1.0f});
-
-	m_GameObjects.push_back(coilyEggGameObject);
-	#pragma endregion
-
-	#pragma region ScoreGameObject
-	Ref<GameObject> scoreObject = CreateRef<GameObject>(this);
-	scoreObject->AddComponent(CreateRef<ScoreComponent>(scoreObject, 0));
-
-	m_GameObjects.push_back(scoreObject);
-	#pragma endregion
+	InitialiseGameObjectsInScene(0);
 
 	// This mess is to center the pyramid in the viewport, can this be made easier?
 	const Hex hex = *m_Grid.find(Hex(static_cast<int>(Configuration.CameraHexPosition.x),
@@ -124,6 +53,12 @@ void SandboxScene::OnUpdate()
 {
 	HL_PROFILE_FUNCTION()
 
+	if (m_GameObjects.size() == 0 && m_RecreateScene)
+	{
+		m_RecreateScene = false;
+		InitialiseGameObjectsInScene(m_ScoreTemp);
+	}
+	
 	for (const Ref<GameObject> gameObject : m_GameObjects) { gameObject->Update(Timestep{0.016f}); }
 
 	const auto newEndIterator = std::ranges::remove_if(m_GameObjects,
@@ -224,4 +159,100 @@ void SandboxScene::CreatePyramid(const int pyramidSize)
 
 		m_GameObjects.push_back(gameObject);
 	}
+}
+
+void SandboxScene::InitialiseGameObjectsInScene(int currentScore)
+{
+	CreatePyramid(Configuration.PyramidWidth);
+
+	#pragma region QBertGameObject
+	const auto qbert1Texture = Texture2D::Create(Configuration.QBertTexture);
+
+	const auto qbertSprite = Heirloom::CreateRef<Sprite>(qbert1Texture);
+	auto qbertGameObject   = Heirloom::CreateRef<GameObject>(this);
+	qbertGameObject->GetTransform()->SetParent(qbertGameObject);
+	auto qbertSpriteRenderer  = qbertGameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
+	auto qbertHealthComponent = qbertGameObject->AddComponent(
+		Heirloom::CreateRef<HealthComponent>(Configuration.MaximumHealth, Configuration.StartHealth));
+
+	qbertSpriteRenderer->SetSprite(qbertSprite);
+
+	MovementControllerData qBertData = ReadFileToJson<MovementControllerData>(
+		"assets/levels/sandbox/QBertMovementControllerData.json");
+
+	const auto movementController = qbertGameObject->AddComponent(
+		Heirloom::CreateRef<QBertMovementController>(qBertData, qbertGameObject));
+
+	movementController->DamageTakenEvent += HL_BIND_EVENT_FN(SandboxScene::OnDamageTakenEvent);
+
+	qbertSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.25f, -1.0f});
+
+	qbertHealthComponent->RegisterOutOfBoundsEventHandler(movementController);
+
+	m_GameObjects.push_back(qbertGameObject);
+	#pragma endregion
+
+	#pragma region DiskGameObject
+	MovementControllerData diskData = ReadFileToJson<MovementControllerData>(
+		"assets/levels/sandbox/DiskMovementControllerData.json");
+
+	const Ref<Texture2D> diskTexture = Texture2D::Create(Configuration.DiskTexture);
+
+	const Ref<Sprite> diskSprite = CreateRef<Sprite>(diskTexture);
+
+	Ref<GameObject> disk1GameObject         = CreateRef<GameObject>(this);
+	Ref<SpriteRenderer> disk1SpriteRenderer = disk1GameObject->AddComponent(CreateRef<SpriteRenderer>());
+
+	disk1SpriteRenderer->SetSprite(diskSprite);
+
+	disk1GameObject->AddComponent(CreateRef<DiskMovementController>(diskData,
+																	TileState::Clear,
+																	CreateRef<std::unordered_set<Hex>>(m_Grid),
+																	disk1GameObject->GetTransform(),
+																	disk1GameObject));
+
+	m_GameObjects.push_back(disk1GameObject);
+	#pragma endregion
+
+	#pragma region CoilyEggGameObject
+	MovementControllerData coilyEggData = ReadFileToJson<MovementControllerData>(
+		"assets/levels/sandbox/CoilyEggMovementControllerData.json");
+
+	const auto coilyEggTexture = Texture2D::Create("assets/textures/CoilyEggTexture.png");
+	const auto coilyEggSprite  = Heirloom::CreateRef<Sprite>(coilyEggTexture);
+
+	auto coilyEggGameObject = CreateRef<GameObject>(this);
+
+	coilyEggGameObject->AddComponent(
+		CreateRef<CoilyEggMovementController>(coilyEggData, TileState::Clear, coilyEggGameObject));
+
+	auto coilyEggSpriteRenderer = coilyEggGameObject->AddComponent(CreateRef<SpriteRenderer>());
+	coilyEggSpriteRenderer->SetSprite(coilyEggSprite);
+	coilyEggSpriteRenderer->SetSpriteOffset(glm::vec3{0.0f, m_HexagonalGridLayout.Size.y * 1.10f, -1.0f});
+
+	m_GameObjects.push_back(coilyEggGameObject);
+	#pragma endregion
+
+	#pragma region ScoreGameObject
+	Ref<GameObject> scoreObject = CreateRef<GameObject>(this);
+	scoreObject->AddComponent(CreateRef<ScoreComponent>(scoreObject, currentScore));
+
+	m_GameObjects.push_back(scoreObject);
+	#pragma endregion
+}
+
+void SandboxScene::OnDamageTakenEvent(DamageTakenEventArgs args)
+{
+	UNREFERENCED_PARAMETER(args);
+
+	for (Ref<GameObject> gameObject : m_GameObjects)
+	{
+		Ref<ScoreComponent> scoreComponent = gameObject->GetComponent<ScoreComponent>();
+
+		if (scoreComponent) { m_ScoreTemp = scoreComponent->GetScore(); }
+	}
+
+	for (Ref<GameObject> gameObject : m_GameObjects) { gameObject->SetActive(false); }
+
+	m_RecreateScene = true;
 }

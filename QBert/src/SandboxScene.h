@@ -6,6 +6,7 @@
 #include <unordered_set>
 
 #include "CenteredCameraController.h"
+#include "EventArgs.h"
 #include "Heirloom.h"
 #include "SandboxLevelSettings.h"
 #include "HexagonalGrid/Hexagon.h"
@@ -29,9 +30,13 @@ public:
 
 private:
 	void ReadConfigFile();
-
 	void CreatePyramid(int pyramidSize);
+	void InitialiseGameObjectsInScene(int currentScore);
+	void OnDamageTakenEvent(DamageTakenEventArgs args);
 
+	int m_ScoreTemp;
+	bool m_RecreateScene;
+	
 	CenteredCameraController m_CameraController;
 	Layout m_HexagonalGridLayout;
 

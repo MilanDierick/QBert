@@ -14,6 +14,8 @@ Heirloom::WeakRef<Heirloom::GameObject> ScoreComponent::GetParent() const { retu
 
 void ScoreComponent::SetParent(const Heirloom::Ref<Heirloom::GameObject> gameObject) { m_Parent = gameObject; }
 
+unsigned int ScoreComponent::GetScore() const { return m_Score; }
+
 void ScoreComponent::Update(Heirloom::Timestep ts)
 {
 	UNREFERENCED_PARAMETER(ts);
@@ -28,6 +30,11 @@ void ScoreComponent::Render()
 	ImGui::SetWindowFontScale(2.0);
 	ImGui::Text("Score: %d", m_Score);
 	ImGui::End();
+}
+
+void ScoreComponent::RegisterScoreSource(Heirloom::Ref<IScoreSource> scoreSource)
+{
+	scoreSource->ScoreSourceEvent += HL_BIND_EVENT_FN(ScoreComponent::OnScoreSourceEvent);
 }
 
 void ScoreComponent::RegisterToAllScoreSourceEvents()
@@ -47,6 +54,8 @@ void ScoreComponent::OnScoreSourceEvent(const ScoreSourceEventArgs args)
 	switch (args.ScoreSource)
 	{
 		case ScoreSource::Tile: m_Score += SandboxScene::Configuration.ScorePerOccupiedTile;
+			break;
+		case ScoreSource::Coily: m_Score += SandboxScene::Configuration.ScorePerCoilyDeath;
 			break;
 		default: ;
 	}

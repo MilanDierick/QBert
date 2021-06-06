@@ -1,5 +1,7 @@
 ﻿#include "CoilyMovementController.h"
 
+#include "ScoreComponent.h"
+
 CoilyMovementController::CoilyMovementController(const MovementControllerData data,
 												 const TileState preferredTileState,
 												 const Heirloom::WeakRef<Heirloom::GameObject> parent)
@@ -17,6 +19,15 @@ void CoilyMovementController::Update(Heirloom::Timestep ts)
 
 	if (GetCurrentHex() == m_ChaseTargetController.lock()->GetCurrentHex())
 	{
+		if (!CheckIfWithinBounds(GetCurrentHex()))
+		{
+			const ScoreSourceEventArgs args = ScoreSourceEventArgs(ScoreSource::Coily);
+			ScoreSourceEvent.Invoke(args);
+			
+			m_Parent.lock()->SetActive(false);
+			return;
+		}
+		
 		m_ChaseTargetController.lock()->Collide();
 	}
 	

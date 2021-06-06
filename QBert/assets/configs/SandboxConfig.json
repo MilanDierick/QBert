@@ -8,6 +8,7 @@
   "TicksPerMove": 50,
   "ScorePerOccupiedTile": 50,
   "ScorePerDiskLeft": 150,
+  "ScorePerCoilyDeath": 500,
   "InitialZoomLevel": 8.0,
   "QBertTexture": "assets/textures/QBert1.png",
   "TileTexture": "assets/textures/TileTexture.png",

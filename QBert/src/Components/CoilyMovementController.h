@@ -4,17 +4,16 @@
 
 #pragma once
 #include "Heirloom.h"
+#include "IScoreSource.h"
 #include "MovementController.h"
 #include "QBertMovementController.h"
 
-class CoilyMovementController final : public Heirloom::Component, public MovementController
+class CoilyMovementController final : public Heirloom::Component, public MovementController, public IScoreSource
 {
 public:
 	[[nodiscard]] CoilyMovementController(MovementControllerData data,
 										  TileState preferredTileState,
 										  Heirloom::WeakRef<Heirloom::GameObject> parent);
-
-	Heirloom::Event<ScoreSourceEventArgs> ScoreSourceEvent;
 
 	Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override;
 	void SetParent(Heirloom::Ref<Heirloom::GameObject> gameObject) override;
