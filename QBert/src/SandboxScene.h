@@ -24,11 +24,11 @@ public:
 	void OnRender() override;
 	void OnImGuiRender() override;
 
-private:
-	void ReadConfigFile();
-
 	template <typename T>
 	static nlohmann::json ReadFileToJson(std::string fileName);
+
+private:
+	void ReadConfigFile();
 
 	void CreatePyramid(int pyramidSize);
 

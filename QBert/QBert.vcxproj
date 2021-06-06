@@ -308,6 +308,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
   <ItemGroup>
     <ClInclude Include="src\CenteredCameraController.h" />
     <ClInclude Include="src\Components\CoilyEggMovementController.h" />
+    <ClInclude Include="src\Components\CoilyMovementController.h" />
     <ClInclude Include="src\Components\DiskMovementController.h" />
     <ClInclude Include="src\Components\HealthComponent.h" />
     <ClInclude Include="src\Components\QBertMovementController.h" />
@@ -327,6 +328,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
   <ItemGroup>
     <ClCompile Include="src\CenteredCameraController.cpp" />
     <ClCompile Include="src\Components\CoilyEggMovementController.cpp" />
+    <ClCompile Include="src\Components\CoilyMovementController.cpp" />
     <ClCompile Include="src\Components\DiskMovementController.cpp" />
     <ClCompile Include="src\Components\HealthComponent.cpp" />
     <ClCompile Include="src\Components\QBertMovementController.cpp" />
@@ -348,6 +350,7 @@ IF EXIST "$(SolutionDir)Heirloom\thirdparty\irrKlang\bin\Win64\*.dll"\ (xcopy /Q
     </Content>
     <Content Include="assets\fonts\Lingua.otf" />
     <Content Include="assets\levels\sandbox\CoilyEggMovementControllerData.json" />
+    <Content Include="assets\levels\sandbox\CoilyMovementControllerData.json" />
     <Content Include="assets\levels\sandbox\DiskMovementControllerData.json" />
     <Content Include="assets\levels\sandbox\QBertMovementControllerData.json" />
     <Content Include="assets\shaders\FlatColor.glsl" />

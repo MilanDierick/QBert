@@ -39,4 +39,5 @@ private:
 	Heirloom::WeakRef<Heirloom::GameObject> m_Parent;
 
 	void OnOutOfBoundsEvent(OutOfBoundsEventArgs args);
+	void OnDamageTakenEvent(DamageTakenEventArgs args);
 };

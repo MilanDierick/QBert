@@ -22,6 +22,8 @@ public:
 	[[nodiscard]] explicit QBertMovementController(MovementControllerData data,
 												   Heirloom::WeakRef<Heirloom::GameObject> parent);
 
+	Heirloom::Event<DamageTakenEventArgs> DamageTakenEvent;
+	
 	[[nodiscard]] QBertMovementState GetCurrentState() const;
 	void SetCurrentState(QBertMovementState currentState);
 	Heirloom::WeakRef<Heirloom::GameObject> GetParent() const override;
@@ -29,6 +31,8 @@ public:
 
 	void Update(Heirloom::Timestep ts) override;
 	void Render() override;
+
+	void Collide();
 
 private:
 	QBertMovementState m_CurrentState;

@@ -9,6 +9,16 @@
 enum class ScoreSource;
 enum class TileState;
 
+struct DamageTakenEventArgs : Heirloom::EventArgs
+{
+	[[nodiscard]] explicit DamageTakenEventArgs(const Hex hexagon)
+		: Hexagon(hexagon)
+	{
+	}
+
+	Hex Hexagon;
+};
+
 struct CoilyEggDestroyedEventArgs : Heirloom::EventArgs
 {
 	[[nodiscard]] explicit CoilyEggDestroyedEventArgs(const Hex& hexagon)

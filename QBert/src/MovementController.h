@@ -6,8 +6,7 @@
 #include "Heirloom.h"
 
 #include "EventArgs.h"
-#include "glm/vec3.hpp"
-#include "Heirloom/Core/Core.h"
+#include "glm/glm.hpp"
 #include "HexagonalGrid/Hexagon.h"
 #include "HexagonalGrid/Layout.h"
 

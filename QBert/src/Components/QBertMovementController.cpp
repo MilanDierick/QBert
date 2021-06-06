@@ -54,6 +54,12 @@ void QBertMovementController::Render()
 {
 }
 
+void QBertMovementController::Collide()
+{
+	const DamageTakenEventArgs args = DamageTakenEventArgs(GetCurrentHex());
+	DamageTakenEvent.Invoke(args);
+}
+
 bool QBertMovementController::CheckIfOnDisk()
 {
 	HL_PROFILE_FUNCTION()

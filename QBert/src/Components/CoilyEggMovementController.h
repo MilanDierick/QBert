@@ -25,8 +25,8 @@ public:
 	void Render() override;
 
 private:
+	Heirloom::WeakRef<Heirloom::GameObject> m_Parent;
+
 	void SpawnCoily();
 	void DesignateNextHexTarget();
-
-	Heirloom::WeakRef<Heirloom::GameObject> m_Parent;
 };
