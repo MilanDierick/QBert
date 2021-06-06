@@ -5,7 +5,8 @@
 #include "Components/TileComponent.h"
 #include "HexagonalGrid/HexagonalGrid.h"
 
-MovementController::MovementController(const MovementControllerData data, TileState preferredTileState,
+MovementController::MovementController(const MovementControllerData data,
+									   TileState preferredTileState,
 									   const Heirloom::WeakRef<Heirloom::Transform> transform)
 	: m_CurrentHex(data.CurrentHex),
 	  m_TargetHex(data.TargetHex),
@@ -19,6 +20,8 @@ MovementController::MovementController(const MovementControllerData data, TileSt
 {
 	HexChangedEvent  = Heirloom::Event<HexChangedEventArgs>();
 	OutOfBoundsEvent = Heirloom::Event<OutOfBoundsEventArgs>();
+
+	m_Transform.lock()->SetPosition({HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 0.0f});
 }
 
 Hex MovementController::GetCurrentHex() const { return m_CurrentHex; }
@@ -73,10 +76,7 @@ void MovementController::Update(const bool updateTransformPositionOnly = false)
 		return;
 	}
 
-	if (GetCurrentHex() != GetTargetHex())
-	{
-		MoveTowardsTargetHex();
-	}
+	if (GetCurrentHex() != GetTargetHex()) { MoveTowardsTargetHex(); }
 }
 
 Hex MovementController::GetHexInDirection(const Hex origin, MovementDirection direction)
@@ -98,6 +98,14 @@ bool MovementController::CheckIfWithinBounds(const Hex hexagon) const
 	if (std::abs(hexagon.Q - -hexagon.R) > SandboxScene::Configuration.PyramidWidth - 1 || hexagon.Q < 0 || hexagon.R <
 		0) { return false; }
 	return true;
+}
+
+void MovementController::UpdateTransformPosition() const
+{
+	HL_PROFILE_FUNCTION()
+
+	const glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
+	m_Transform.lock()->SetPosition(alignedPosition);
 }
 
 void MovementController::MoveTowardsTargetHex()
@@ -135,12 +143,4 @@ void MovementController::MoveTowardsTargetHex()
 	m_DistanceAlreadyMoved.y += totalDistanceToMove.y / m_TicksPerMove;
 
 	m_Transform.lock()->SetPosition(currentPosition);
-}
-
-void MovementController::UpdateTransformPosition() const
-{
-	HL_PROFILE_FUNCTION()
-
-	const glm::vec3 alignedPosition = {HexagonalGrid::HexToPixel(m_HexagonalGridLayout, m_CurrentHex), 1.0f};
-	m_Transform.lock()->SetPosition(alignedPosition);
 }

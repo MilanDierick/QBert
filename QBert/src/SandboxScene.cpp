@@ -39,6 +39,7 @@ void SandboxScene::OnLoad()
 																1.0f,
 																glm::vec4(1.0f)));
 	auto qbertGameObject      = Heirloom::CreateRef<GameObject>(this);
+	qbertGameObject->GetTransform()->SetParent(qbertGameObject);
 	auto qbertSpriteRenderer  = qbertGameObject->AddComponent(Heirloom::CreateRef<SpriteRenderer>());
 	auto qbertHealthComponent = qbertGameObject->AddComponent(
 		Heirloom::CreateRef<HealthComponent>(Configuration.MaximumHealth, Configuration.StartHealth));

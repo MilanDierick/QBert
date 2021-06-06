@@ -69,9 +69,6 @@ public:
 	void SetTargetHexInDirection(MovementDirection direction);
 	bool CheckIfWithinBounds(Hex hexagon) const;
 
-protected:
-	void MoveTowardsTargetHex();
-
 private:
 	Hex m_CurrentHex;
 	Hex m_TargetHex;
@@ -86,4 +83,5 @@ private:
 	Heirloom::WeakRef<Heirloom::Transform> m_Transform;
 
 	void UpdateTransformPosition() const;
+	void MoveTowardsTargetHex();
 };

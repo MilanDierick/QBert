@@ -46,6 +46,8 @@ void QBertMovementController::Update(const Heirloom::Timestep ts)
 
 	m_CurrentState = QBertMovementState::Moving;
 	MovementController::Update(false);
+
+	CheckIfOnDisk();
 }
 
 void QBertMovementController::Render()
