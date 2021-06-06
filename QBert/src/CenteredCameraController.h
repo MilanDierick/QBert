@@ -19,7 +19,6 @@ public:
 	void SetCameraPosition(glm::vec3& position) { m_Camera.SetPosition(position); }
 
 private:
-	void OnMouseScrolledEvent(Heirloom::MouseScrolledEventArgs eventArgs);
 	void OnWindowResizedEvent(Heirloom::WindowResizedEventArgs eventArgs);
 	float m_AspectRatio;
 	float m_ZoomLevel = 1.0f;

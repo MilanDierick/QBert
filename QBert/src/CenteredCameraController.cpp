@@ -10,7 +10,6 @@ CenteredCameraController::CenteredCameraController(const float aspectRatio)
 {
 	HL_PROFILE_FUNCTION();
 
-	Heirloom::Input::MouseScrolledEvent += HL_BIND_EVENT_FN(CenteredCameraController::OnMouseScrolledEvent);
 	Heirloom::Application::Get().GetWindow().WindowResizedEvent += HL_BIND_EVENT_FN(
 		CenteredCameraController::OnWindowResizedEvent);
 }
@@ -18,13 +17,6 @@ CenteredCameraController::CenteredCameraController(const float aspectRatio)
 void CenteredCameraController::SetZoomLevel(const float zoomLevel)
 {
 	m_ZoomLevel = zoomLevel;
-	m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
-}
-
-void CenteredCameraController::OnMouseScrolledEvent(const Heirloom::MouseScrolledEventArgs eventArgs)
-{
-	m_ZoomLevel -= eventArgs.YOffset * 0.25f;
-	m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
 	m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 }
 
